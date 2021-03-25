@@ -27,6 +27,9 @@ module.exports = env => ({
         loader: 'tsx',
         target: 'es2016'
       }
+    }, {
+      test: /\.(png|jpe?g|svg)$/,
+      loader: 'file-loader'
     }]
   },
   resolve: {
