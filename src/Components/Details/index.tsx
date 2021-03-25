@@ -25,7 +25,7 @@ export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
           {
             display?.character &&
             <>
-              <div className="md:flex pt-10">
+              <div className="md:flex pt-10 md:pt-0">
                 <div className="md:w-1/3">
                   <img src={display.character.image} alt={display.character.name} />
                 </div>
