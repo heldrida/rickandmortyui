@@ -28,7 +28,7 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
 
   return (
     <div className="w-full">
-      <div className="bg-gray-200 w-full z-50 flex justify-center items-center h-14 md:h-12 fixed md:relative md:sticky md:top-0">
+      <div className="shadow-sm md:shadow-none bg-white w-full z-50 flex justify-center items-center h-14 md:h-12 fixed md:relative md:top-0">
         <div className="absolute inset-y-0 left-0 w-16 h-16 md:hidden" onClick={menuToggle}>
           menu
         </div>
@@ -36,7 +36,7 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
       </div>
       <div className="w-full max-w-screen-2xl mx-auto md:pt-5">
         <div className="md:flex">
-          <div className={`${commonYOffset} bg-white z-20 ${transition ? 'transition-transform' : 'transition-none'} duration-300 md:transition-none bg-white fixed transform ${menuOpen ? 'translate-x-1/1 shadow-lg' : '-translate-x-full' } md:shadow-none md:-translate-x-0 flex-none h-full w-3/4 md:sticky md:top-0 md:w-80`}>
+          <div className={`${commonYOffset} bg-white z-20 ${transition ? 'transition-transform' : 'transition-none'} duration-300 md:transition-none bg-white fixed transform ${menuOpen ? 'translate-x-1/1 shadow-lg' : '-translate-x-full' } md:shadow-none md:-translate-x-0 flex-none h-full w-3/4 md:sticky md:top-10 md:w-80`}>
             {sidebar}
           </div>
           <div className={`${commonYOffset} z-10 min-w-0 w-full flex-none md:flex-auto max-h-full`}>
