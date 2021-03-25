@@ -35,6 +35,7 @@ export const CharacterList = () => {
 
     // Update pagination
     // and the loading status
+    console.log("info", info)
   }, [characterResults])
 
   return (
@@ -44,9 +45,12 @@ export const CharacterList = () => {
           list.map((props, idx) => <Card key={idx} {...props} />)
         }
       </div>
-      <div className="w-full pt-5 pb-5 pr-1">
-        <Pagination total={100} range={5} />
-      </div>
+        {
+          characterResults.info?.count &&
+          <div className="w-full pt-5 pb-5 pr-1">
+            <Pagination total={characterResults.info?.count} range={5} />
+          </div>
+        }
     </>
   )
 }
