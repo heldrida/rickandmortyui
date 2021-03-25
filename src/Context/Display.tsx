@@ -1,4 +1,5 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback } from 'react'
+import { useContextCreator } from "./";
 
 interface DisplayMode {
   details: boolean,
@@ -25,4 +26,12 @@ export const DisplayProvider = (props: DisplayProvider): React.ReactElement => {
       </DisplayDispatchContext.Provider>
     </ DisplayContext.Provider>
   )
+}
+
+export const useSetDisplay = () => {
+  const setDisplay: DispatchDisplayMode = useContextCreator('DisplayDispatch', DisplayDispatchContext)
+  const cb = useCallback((display) => {
+    return setDisplay && setDisplay(display)
+  }, [setDisplay])
+  return cb
 }

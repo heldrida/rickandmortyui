@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useSetDisplay } from '../../Context/Display'
 
 interface Props {
   name: string,
@@ -7,10 +8,13 @@ interface Props {
 }
 
 export const Card: React.FC<Props> = ({ name, specie, status }) => {
+  const setDisplay = useSetDisplay()
+
   const onDetails = () => {
-    console.warn("TODO: show detail panel")
+    console.warn("TODO: pass details data")
+    setDisplay({ details: true })
   }
-  
+
   return (
     <>
       <div className="rounded overflow-hidden shadow-lg">
