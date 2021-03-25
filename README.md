@@ -14,6 +14,31 @@ It's as an experimental project to test the brillian work of [evanw](https://git
 
 Also, a test-drive for Tailwindcss, used in the project by css class composition.
 
+## Specs
+
+The goals for the project are simple:
+- Responsive UI
+- Top bar should present the logo
+- Two pages
+  - Character list view
+    - A filter panel in the left side (search by name, status and gender selectables)
+    - Content view
+      - Character list paginated (20 items per page)
+      - Pagination controller
+      - Scroll to top CTA
+      - Detail page CTA
+  - Character detail view
+    - Back button CTA
+    - Image
+    - Details
+    - Episodes panel
+      - Selectable episodes (max. of 5 episode tabs)
+      - Selected episode details
+
+It **DOES NOT** try to fullfil every use-case (preserve history, e.g. navigation history pushstate, server-side middleware to mitigate CORS (it assumes our address is whitelisted by the target endpoint), e2e testing, distribution optimisation, tailwind postcss integration (used the CDN version), etc). 
+
+Similarily, while it should work, the project was developed on the grounds of webkit (Chrome, Brave) and Firefox latest, use as advised.
+
 ## Requirements
 
 You'll need `Nodejs`, as developed over `v12`. Assumed [YARN](https://yarnpkg.com/) as the prefered package manager througout the documentation, feel free to use [NPM](https://www.npmjs.com/) by changing the commands in accordance.
