@@ -1,7 +1,9 @@
 {
   "name": "rick-and-marty-ui",
   "version": "0.0.1",
-  "scripts": {},
+  "scripts": {
+    "start": "webpack-dev-server --mode development --open"
+  },
   "author": "Punkbit",
   "devDependencies": {
     "@types/react": "^17.0.3",
