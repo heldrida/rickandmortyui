@@ -34,7 +34,7 @@ export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
                     display?.character &&
                     Object.keys(display.character)
                       .filter(key => key !== "image")
-                      .map(key => display.character && <p>{display.character[key]}</p>)
+                      .map((key, idx) => display.character && <p key={idx}>{display.character[key]}</p>)
                   }
                 </div>
               </div>
