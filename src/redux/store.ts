@@ -1,7 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { characterSlice } from './slices/characterSlice'
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    character: characterSlice.reducer,
+  },
   // Disables Redux dev-tools in production
   devTools: process.env.NODE_ENV !== "development" ? false : true,
 })
