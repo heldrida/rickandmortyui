@@ -57,6 +57,14 @@ To do development work, you  an fire the webpack-dev-server by:
 yarn start
 ```
 
+## Tests
+
+Run unit-tests by:
+
+```
+yarn test
+```
+
 ## References
 
 [Rick and Morty API](https://rickandmortyapi.com/documentation)
