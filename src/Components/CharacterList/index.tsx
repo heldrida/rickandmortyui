@@ -43,7 +43,7 @@ export const CharacterList = () => {
           <img className="animate-spin h-20 w-20 opacity-10" src={loaderImg} />
         </div> ||
         <>
-          <div className="w-full px-4 m:px-0 grid gap-4 grid-cols-1 lg:grid-cols-3">
+          <div className="w-full px-4 m:px-0 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
             {
               list.map((props, idx) => <Card key={idx} {...props} />)
             }
