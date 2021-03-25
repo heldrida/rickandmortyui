@@ -35,3 +35,5 @@ export const useSetDisplay = () => {
   }, [setDisplay])
   return cb
 }
+
+export const useDisplayState = (): DisplayMode => useContextCreator('Display', DisplayContext)
