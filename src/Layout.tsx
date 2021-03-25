@@ -73,7 +73,7 @@ const Main: React.FC<MainProps> = ({ menuOpen, transition, menuToggleHandler, si
     <div className={`${commonYOffset} bg-white z-20 ${transition ? 'transition-transform' : 'transition-none'} duration-300 md:transition-none bg-white fixed transform ${menuOpen ? 'translate-x-1/1 shadow-lg' : '-translate-x-full' } md:shadow-none md:-translate-x-0 flex-none h-full w-3/4 md:sticky md:top-10 md:w-80`}>
       {sidebar}
     </div>
-    <div className={`${commonYOffset} z-10 min-w-0 w-full flex-none md:flex-auto max-h-full`}>
+    <div className={`${commonYOffset} pb-10 z-10 min-w-0 w-full flex-none md:flex-auto max-h-full`}>
       <div className={`md:hidden fixed top-0 transition-opacity duration-300 z-10 w-full h-full pointer-events-none bg-black ${menuOpen ? 'bg-opacity-40 pointer-events-auto' : 'bg-opacity-0' }`} onClick={menuToggleHandler} />
       {content}
     </div>
