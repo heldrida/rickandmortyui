@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSetDisplay } from '../../Context/Display'
+import { Button } from '../Button'
 
 interface Props {
   name: string,
@@ -31,12 +32,10 @@ export const Card: React.FC<Props> = ({ name, specie, status }) => {
           </p>
         </div>
         <div className="text-center p-6">
-          <button
-            className="bg-green-400 hover:bg-green-300 text-white font-bold py-2 px-4 rounded"
-            onClick={onDetails}
-          >
-            Details
-          </button>
+          <Button
+            callback={onDetails}
+            placeholder={'Details'}
+          />
         </div>
       </div>
     </>
