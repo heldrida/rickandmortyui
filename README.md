@@ -14,6 +14,24 @@ It's as an experimental project to test the brillian work of [evanw](https://git
 
 Also, a test-drive for Tailwindcss, used in the project by css class composition.
 
+## Requirements
+
+You'll need `Nodejs`, as developed over `v12`. Assumed [YARN](https://yarnpkg.com/) as the prefered package manager througout the documentation, feel free to use [NPM](https://www.npmjs.com/) by changing the commands in accordance.
+
+Pull the repository to your local and install the dependencies by:
+
+```zsh
+yarn install
+```
+
+## Development
+
+To do development work, you  an fire the webpack-dev-server by:
+
+```
+yarn start
+```
+
 ## Logo
 
 <div>Repository logo copied from <a href="https://logos.fandom.com/wiki/Rick_and_Morty" title="Freepik">Logopedia</a></div>
