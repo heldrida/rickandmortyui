@@ -54,7 +54,7 @@ export const Episodes = () => {
           ))
         }
       </ul>
-      <div className="w-full pt-10">
+      <div className="w-full pt-10 pb-10">
         {
           Object.values(mockEpisodes[activeTab]).map(val => <p>{val}</p>)
         }
