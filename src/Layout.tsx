@@ -3,6 +3,7 @@ import { useDisplayState, useSetDisplay } from './Context/Display';
 import { Details } from "./Components/Details";
 import logoImg from './images/logo.svg'
 import iconMenu from './images/icon-menu.svg';
+import iconClose from './images/close.svg'
 
 const commonYOffset = "pt-20 md:pt-0"
 
@@ -73,6 +74,7 @@ interface MainProps extends LayoutProps {
 const Main: React.FC<MainProps> = ({ menuOpen, transition, menuToggleHandler, sidebar, content }) => (
   <>
     <div className={`${commonYOffset} bg-white z-20 ${transition ? 'transition-transform' : 'transition-none'} duration-300 md:transition-none bg-white fixed transform ${menuOpen ? 'translate-x-1/1 shadow-lg' : '-translate-x-full' } md:shadow-none md:-translate-x-0 flex-none h-full w-3/4 md:sticky md:top-10 md:w-80`}>
+      <img className={`${menuOpen ? '' : 'hidden'} md:hidden fixed top-30 h-10 -right-16 pointer-events-none`} src={iconClose} alt="Close the menu" />
       {sidebar}
     </div>
     <div className={`${commonYOffset} pb-10 z-10 min-w-0 w-full flex-none md:flex-auto max-h-full`}>
