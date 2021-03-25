@@ -2,6 +2,7 @@
   "name": "rick-and-marty-ui",
   "version": "0.0.1",
   "scripts": {
+    "build": "webpack --config webpack.config.js --env.production --progress",
     "start": "webpack-dev-server --mode development --open",
     "test": "jest src"
   },

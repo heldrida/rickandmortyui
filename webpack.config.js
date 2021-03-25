@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { ESBuildMinifyPlugin } = require('esbuild-loader')
 
 // Check for environment flag
 const isProd = env => env && env.hasOwnProperty('production')
@@ -34,5 +35,17 @@ module.exports = env => ({
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx']
+  },
+  optimization: {
+    minimizer: [
+      new ESBuildMinifyPlugin({
+        target: 'es2016',
+        minify: true,
+        exclude: /node_modules/,
+      })
+    ],
+    splitChunks: {
+      chunks: 'all',
+    },
   }
 })

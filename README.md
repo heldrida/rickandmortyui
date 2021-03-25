@@ -43,6 +43,8 @@ Similarily, while it should work, the project was developed on the grounds of we
 
 You'll need `Nodejs`, as developed over `v12`. Assumed [YARN](https://yarnpkg.com/) as the prefered package manager througout the documentation, feel free to use [NPM](https://www.npmjs.com/) by changing the commands in accordance.
 
+Of course, make sure you are in the `root` directory for the project.
+
 Pull the repository to your local and install the dependencies by:
 
 ```zsh
@@ -63,6 +65,20 @@ Run unit-tests by:
 
 ```
 yarn test
+```
+
+## Build public
+
+Create a public distribution by running:
+
+```
+yarn build
+```
+
+Obs: You can test the generated static files by running an http-server (optional, you'll need [npx](https://docs.npmjs.com/cli/v7/commands/npx)) e.g:
+
+```
+npx http-server ./dist
 ```
 
 ## References
