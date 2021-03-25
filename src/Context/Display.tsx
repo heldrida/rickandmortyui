@@ -1,7 +1,20 @@
 import React, { useCallback } from 'react'
 import { useContextCreator } from "./";
 
+interface Character extends Record<string, any> {
+  id: number,
+  name: string,
+  status: string,
+  specie: string,
+  type: string,
+  gender: string,
+  origin: string,
+  created: string,
+  image: string,
+}
+
 interface DisplayMode {
+  character?: Character,
   details: boolean,
 }
 

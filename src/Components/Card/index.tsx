@@ -13,7 +13,20 @@ export const Card: React.FC<Props> = ({ name, specie, status }) => {
 
   const onDetails = () => {
     console.warn("TODO: pass details data")
-    setDisplay({ details: true })
+    setDisplay({
+      details: true,
+      character: {
+        id: 1,
+        name: "foobar",
+        status: "foobar",
+        specie: "foobar",
+        type: "foobar",
+        gender: "foobar",
+        origin: "foobar",
+        created: "foobar",
+        image: "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+      }
+    })
   }
 
   return (
