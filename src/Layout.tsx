@@ -36,12 +36,12 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
   return (
     <div className="w-full">
       <div className="shadow-sm md:shadow-none bg-white w-full z-50 flex justify-center items-center h-14 md:h-12 fixed md:relative md:top-0">
-        <div className="absolute inset-y-0 left-0 w-16 h-16 md:hidden" onClick={menuToggle}>
+        <div className={`${display.details && 'hidden'} absolute inset-y-0 left-0 w-16 h-16 md:hidden`} onClick={menuToggle}>
           menu
         </div>
         Logo
       </div>
-      <div className="w-full max-w-screen-2xl mx-auto md:pt-5">
+      <div className="px-1 md:px-5 w-full max-w-screen-2xl mx-auto md:pt-5">
         <div className="md:flex">
           {
             !display.details &&

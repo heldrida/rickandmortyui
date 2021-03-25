@@ -32,7 +32,7 @@ const SelectFilter: React.FC<SelectFilterProps> = ({ placeholder }) => (
 
 export const Sidebar = () => {
   return (
-    <div className="px-4">
+    <div className="px-4 md:px-0">
       <div className="mb-8">
         <InputFilter placeholder="Filter by name" />
       </div>
