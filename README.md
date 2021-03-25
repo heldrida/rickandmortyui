@@ -32,6 +32,12 @@ To do development work, you  an fire the webpack-dev-server by:
 yarn start
 ```
 
+## References
+
+[Rick and Morty API](https://rickandmortyapi.com/documentation)
+
+[Esbuild](https://esbuild.github.io/)
+
 ## Logo
 
 <div>Repository logo copied from <a href="https://logos.fandom.com/wiki/Rick_and_Morty" title="Freepik">Logopedia</a></div>
