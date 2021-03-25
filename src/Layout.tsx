@@ -2,6 +2,7 @@ import React, { useState, useEffect }  from 'react'
 import { useDisplayState, useSetDisplay } from './Context/Display';
 import { Details } from "./Components/Details";
 import logoImg from './images/logo.svg'
+import iconMenu from './images/icon-menu.svg';
 
 const commonYOffset = "pt-20 md:pt-0"
 
@@ -38,7 +39,7 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
     <div className="w-full">
       <div className="shadow-sm md:shadow-none bg-white w-full z-50 flex justify-center items-center h-14 md:h-16 fixed md:relative md:top-0">
         <div className={`${display.details && 'hidden'} absolute inset-y-0 left-0 w-16 h-16 md:hidden`} onClick={menuToggle}>
-          menu
+          <img className="p-5 h14" src={iconMenu} alt="Menu" />
         </div>
         <img className="h-14" src={logoImg} alt="Logo" />
       </div>
