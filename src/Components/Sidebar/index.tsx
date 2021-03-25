@@ -37,7 +37,10 @@ export const Sidebar = () => {
         <InputFilter placeholder="Filter by name" />
       </div>
       <div className="mb-8">
-        <SelectFilter placeholder="Filter by X" />
+        <SelectFilter placeholder="Status" />
+      </div>
+      <div className="mb-8">
+        <SelectFilter placeholder="Gender" />
       </div>
     </div>
   )
