@@ -1,5 +1,6 @@
 import React, { useState, useEffect }  from 'react'
 import { useDisplayState, useSetDisplay } from './Context/Display';
+import { Details } from "./Components/Details";
 
 const commonYOffset = "pt-20 md:pt-0"
 
@@ -76,16 +77,5 @@ const Main: React.FC<MainProps> = ({ menuOpen, transition, menuToggleHandler, si
       <div className={`md:hidden fixed top-0 transition-opacity duration-300 z-10 w-full h-full pointer-events-none bg-black ${menuOpen ? 'bg-opacity-40 pointer-events-auto' : 'bg-opacity-0' }`} onClick={menuToggleHandler} />
       {content}
     </div>
-  </>
-)
-
-interface DetailsProps {
-  goBackHandler: () => void
-}
-
-const Details: React.FC<DetailsProps> = ({ goBackHandler }) => (
-  <>
-    <p>{'DetailsComponent'}</p>
-    <button onClick={goBackHandler}>go back</button>
   </>
 )
