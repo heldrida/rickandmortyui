@@ -29,6 +29,9 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
     return () => window.removeEventListener("resize", onWindowResize);
   }, [transition]);
 
+  const menuToggleHandler = () => setMenuOpen(false)
+  const goBackHandler = () => setDisplay({ details: false })
+
   return (
     <div className="w-full">
       <div className="shadow-sm md:shadow-none bg-white w-full z-50 flex justify-center items-center h-14 md:h-12 fixed md:relative md:top-0">
@@ -44,12 +47,12 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
             <Main
               menuOpen={menuOpen}
               transition={transition}
-              setMenuOpen={setMenuOpen}
+              menuToggleHandler={menuToggleHandler}
               sidebar={sidebar}
               content={content}
             /> ||
             <Details
-              setDisplay={setDisplay}
+              goBackHandler={goBackHandler}
             />
           }
         </div>
@@ -60,29 +63,29 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
 
 interface MainProps extends LayoutProps {
   menuOpen: boolean,
-  setMenuOpen: any,
+  menuToggleHandler: () => void,
   transition: boolean,
 }
 
-const Main: React.FC<MainProps> = ({ menuOpen, transition, setMenuOpen, sidebar, content }) => (
+const Main: React.FC<MainProps> = ({ menuOpen, transition, menuToggleHandler, sidebar, content }) => (
   <>
     <div className={`${commonYOffset} bg-white z-20 ${transition ? 'transition-transform' : 'transition-none'} duration-300 md:transition-none bg-white fixed transform ${menuOpen ? 'translate-x-1/1 shadow-lg' : '-translate-x-full' } md:shadow-none md:-translate-x-0 flex-none h-full w-3/4 md:sticky md:top-10 md:w-80`}>
       {sidebar}
     </div>
     <div className={`${commonYOffset} z-10 min-w-0 w-full flex-none md:flex-auto max-h-full`}>
-      <div className={`md:hidden fixed top-0 transition-opacity duration-300 z-10 w-full h-full pointer-events-none bg-black ${menuOpen ? 'bg-opacity-40 pointer-events-auto' : 'bg-opacity-0' }`} onClick={() => { setMenuOpen(false) }} />
+      <div className={`md:hidden fixed top-0 transition-opacity duration-300 z-10 w-full h-full pointer-events-none bg-black ${menuOpen ? 'bg-opacity-40 pointer-events-auto' : 'bg-opacity-0' }`} onClick={menuToggleHandler} />
       {content}
     </div>
   </>
 )
 
 interface DetailsProps {
-  setDisplay: any,
+  goBackHandler: () => void
 }
 
-const Details: React.FC<DetailsProps> = ({ setDisplay }) => (
+const Details: React.FC<DetailsProps> = ({ goBackHandler }) => (
   <>
     <p>{'DetailsComponent'}</p>
-    <button onClick={() => setDisplay({ details: false })}>go back</button>
+    <button onClick={goBackHandler}>go back</button>
   </>
 )
