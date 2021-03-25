@@ -62,6 +62,9 @@ export const fetchCharacters = createAsyncThunk(
       return response.data as InitialState;
     } catch (error) {
       let errorMessage = "Internal Server Error";
+      if (error.response) {
+        errorMessage = error.response.data.error
+      }
       return rejectWithValue(errorMessage);
     }
   }
