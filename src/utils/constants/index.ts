@@ -7,3 +7,5 @@ export const APP_ENDPOINTS: AppEndpoints = {
   character: '/character',
   episode: '/episode'
 }
+
+export const CACHE_TTL = 24 * 60 * 1000
