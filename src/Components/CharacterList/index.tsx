@@ -11,7 +11,7 @@ export const CharacterList = () => {
         }
       </div>
       <div className="w-full pt-5 pb-5 pr-1">
-        <Pagination />
+        <Pagination total={100} range={5} />
       </div>
     </>
   )

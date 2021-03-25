@@ -3,6 +3,7 @@ interface Pagination {
   range: number,
   currentIndex: number,
 }
+
 export const paginator: (pagination: Pagination) => number[] = ({
   total,
   range,
@@ -36,3 +37,5 @@ export const paginator: (pagination: Pagination) => number[] = ({
 
   return numbered;
 }
+
+export const arrowDisableStyleHandler = (disable: boolean) => disable && 'opacity-30 cursor-not-allowed'
