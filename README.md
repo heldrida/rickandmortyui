@@ -13,3 +13,7 @@ This project implements a user interface for the Rick and Morty [API](https://ri
 It's as an experimental project to test the brillian work of [evanw](https://github.com/evanw/esbuild) on [esbuild](https://esbuild.github.io/), although primarily used as a webpack loader, since opted to use Webpack dev server for [HMR](https://webpack.js.org/guides/hot-module-replacement/), as otherwise it'd require some extra work.
 
 Also, a test-drive for Tailwindcss, used in the project by css class composition.
+
+## Logo
+
+<div>Repository logo copied from <a href="https://logos.fandom.com/wiki/Rick_and_Morty" title="Freepik">Logopedia</a></div>
