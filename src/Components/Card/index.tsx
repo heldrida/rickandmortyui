@@ -1,30 +1,35 @@
 import React from 'react'
 import { useSetDisplay } from '../../Context/Display'
 import { Button } from '../Button'
+import { Character } from '../../redux/slices/characterSlice';
 
-interface Props {
-  name: string,
-  specie: string,
-  status: string,
-}
-
-export const Card: React.FC<Props> = ({ name, specie, status }) => {
+export const Card: React.FC<Character> = ({
+  id,
+  name,
+  status,
+  species,
+  type,
+  gender,
+  origin,
+  created,
+  image,
+  episode,
+}) => {
   const setDisplay = useSetDisplay()
 
   const onDetails = () => {
-    console.warn("TODO: pass details data")
     setDisplay({
       details: true,
       character: {
-        id: 1,
-        name: "foobar",
-        status: "foobar",
-        specie: "foobar",
-        type: "foobar",
-        gender: "foobar",
-        origin: "foobar",
-        created: "foobar",
-        image: "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+        id,
+        name,
+        status,
+        species,
+        type,
+        gender,
+        origin,
+        created,
+        image,
       }
     })
   }
@@ -32,13 +37,13 @@ export const Card: React.FC<Props> = ({ name, specie, status }) => {
   return (
     <>
       <div className="rounded overflow-hidden shadow-lg">
-        <img className="w-full" src="https://rickandmortyapi.com/api/character/avatar/1.jpeg" alt="Avatar" />
+        <img className="w-full" src={image} alt="Avatar" />
         <div className="px-6 py-4 pb-0">
           <p className="font-bold text-gray-700 text-base">
             {name}        
           </p>
           <p className="text-gray-700 text-base">
-            {specie}
+            {species}
           </p>
           <p className="text-gray-700 text-base">
             {status}

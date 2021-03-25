@@ -12,6 +12,7 @@ export interface Character extends Record<string, number | string | string[] | C
   name: string,
   status: string,
   species: string,
+  type: string,
   gender: string,
   origin: CharacterOrigin,
   created: string,
