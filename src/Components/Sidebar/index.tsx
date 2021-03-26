@@ -33,7 +33,7 @@ const SelectFilter: React.FC<SelectFilterProps> = ({ callback, options, placehol
     <select className={commonInputClass} value={selected || "default"} onChange={callback}>
       <option value="default" disabled>{placeholder}</option>
       {
-        options.map(val => <option value={val}>{val}</option>)
+        options.map((val, idx) => <option key={idx} value={val}>{val}</option>)
       }
     </select>
     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
