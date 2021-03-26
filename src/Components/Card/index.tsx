@@ -36,7 +36,7 @@ export const Card: React.FC<Character> = ({
       },
       query: display.query || { page: 1 },
     })
-  }, [display])
+  }, [id, display])
 
   return (
     <>
