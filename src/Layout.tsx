@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react'
+import React, { useCallback, useState, useEffect, CSSProperties }  from 'react'
 import { useDisplayState, useSetDisplay } from './Context/Display';
 import { Details } from "./Components/Details";
 import { Query } from './redux/slices/characterSlice';
@@ -6,6 +6,7 @@ import { pushState } from './Components/Router'
 import logoImg from './images/logo.svg'
 import iconMenu from './images/icon-menu.svg';
 import iconClose from './images/close.svg'
+import { ButtonCircleUp } from './Components/ButtonCircleUp'
 
 const commonYOffset = "pt-20 md:pt-0"
 
@@ -94,6 +95,7 @@ const Main: React.FC<MainProps> = ({ menuOpen, transition, menuToggleHandler, si
       {sidebar}
     </div>
     <div className={`${commonYOffset} pb-10 z-10 min-w-0 w-full flex-none md:flex-auto max-h-full`}>
+      <ButtonCircleUp menuOpen={menuOpen} />
       <div className={`md:hidden fixed top-0 transition-opacity duration-300 z-10 w-full h-full pointer-events-none bg-black ${menuOpen ? 'bg-opacity-40 pointer-events-auto' : 'bg-opacity-0' }`} onClick={menuToggleHandler} />
       {content}
     </div>
