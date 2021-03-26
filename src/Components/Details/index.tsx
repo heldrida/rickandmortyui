@@ -56,7 +56,7 @@ export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
                   {
                     display?.character &&
                     Object.keys(display.character)
-                      .filter(key => key !== "image")
+                      .filter(key => key !== "image" && key !== "episode")
                       .map((key, idx) => display.character && <p key={idx}>{key === "origin" && display.character[key].hasOwnProperty('name') ? display.character[key].name : display.character[key]}</p>)
                   }
                 </div>
