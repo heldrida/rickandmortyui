@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { fetchCharacters, Query, Gender, Status } from '../../redux/slices/characterSlice'
 import { useAppDispatch } from '../../redux/hooks'
 import { useSetDisplay } from '../../Context/Display'
-import { Button } from '../Button';
+import { Button } from '../Button'
+import { useDebounce } from '../../utils/hooks'
+import { FILTER_DEBOUNCE_TIMEOUT_MS  } from '../../utils/constants';
 
 const commonInputClass = "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 
@@ -49,10 +51,11 @@ export const Sidebar = () => {
   const [filterByName, setFilterByName] = useState<string | undefined>(undefined)
   const [filterByStatus, setFilterByStatus] = useState<string | undefined>(undefined)
   const [filterByGender, setFilterByGender] = useState<string | undefined>(undefined)
+  const debouncedFilterByName = useDebounce(filterByName, FILTER_DEBOUNCE_TIMEOUT_MS);
 
   useEffect(() => {
     const filterObservers: Record<string, any> = {
-      name: filterByName,
+      name: debouncedFilterByName,
       status: filterByStatus,
       gender: filterByGender,
     }
@@ -63,14 +66,16 @@ export const Sidebar = () => {
         return acc
       }, { page: 1 } as Query);    
 
-      dispatch(fetchCharacters({ query  }))
-
-    // Update user display preferences
-    // since required when paginating filtered by content
-    setDisplay({
-      query      
-    })
-  }, [filterByName, filterByGender, filterByStatus])
+      // Only trigger when non-page filters available
+      if (Object.keys(query).length > 1) {
+        dispatch(fetchCharacters({ query  }))
+        // Update user display preferences
+        // since required when paginating filtered by content
+        setDisplay({
+          query      
+        })
+      }
+  }, [debouncedFilterByName, filterByGender, filterByStatus])
 
   const reset = () => [setFilterByGender, setFilterByName, setFilterByStatus].forEach(fn => fn(undefined))
 
