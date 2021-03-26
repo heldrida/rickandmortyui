@@ -30,6 +30,16 @@ describe('Paginator is valid', () => {
     })
     expect(expected).toEqual(result);
   });
+
+  test('when the current index is 3, in a total of 34', () => {
+    const expected = [3, 4, 5, 6, 7, -1, 34]
+    const result = paginator({
+      total: 34,
+      range: 5,
+      currentIndex: 3,
+    })
+    expect(expected).toEqual(result);
+  });
 })
 
 describe("Paginator throws", () => {
