@@ -40,6 +40,17 @@ interface RouterProps {
 }
 
 export const Router = ({ children }: RouterProps) => {
+  const dispatch = useAppDispatch()
+
+  // CustomEvent<Query>
+  const onPushState = useCallback((e: any) => {
+    const query: Query = e.detail
+    console.log('onPushState', query)
+    dispatch(fetchCharacters({
+      query
+    }))
+  }, [])
+
   useEffect(() => {
     console.log('init onPushState listener')
     document.addEventListener(
