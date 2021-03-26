@@ -14,7 +14,8 @@ const App = () => {
     const defaultPage = 1
     const page = getRouteValue({ name: 'page', fallbackValue: defaultPage });
 
-    if (page != defaultPage) {
+    // Parse page (as URI is string)
+    if (parseInt(page) !== defaultPage) {
       title = `Page ${page}` 
       url = `/page/${page}`
     }
@@ -23,8 +24,8 @@ const App = () => {
       state: {
         page,
       },
-      title: `Page ${page}`,
-      url: `/page/${page}`,
+      title,
+      url,
     })
   }, [])
 
