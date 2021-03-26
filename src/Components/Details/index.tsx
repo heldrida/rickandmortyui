@@ -4,6 +4,7 @@ import { useDisplayState } from '../../Context/Display';
 import { Episodes } from '../Episodes';
 import { fetchEpisodes, Episode } from '../../redux/slices/episodeSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { Loader } from '../Loader'
 
 interface DetailsProps {
   goBackHandler: () => void
@@ -61,9 +62,16 @@ export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
                 </div>
               </div>
               {
-                list.length > 0 &&
                 <div className="w-full pt-10">
-                  <Episodes list={list} />
+                  {                    
+                    episodeResults.loading &&
+                    <Loader />
+                  }
+                  {
+                    !episodeResults.loading &&
+                    list.length > 0 &&
+                    <Episodes list={list} />
+                  }
                 </div>
               }
             </>
