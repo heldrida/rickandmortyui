@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { fetchCharacters, Query } from '../../redux/slices/characterSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 
@@ -68,33 +68,44 @@ export const getRouteSearchQuery = ({ fallbackValue, search = window.location.se
   }
 }
 
+export const useRouteChange = ({ onPushState }: { onPushState?: (e: CustomEvent<Query>) => void }) => {
+  const [changed, setChanged] = useState<{ timestamp: Date }>({ timestamp: new Date() })
+
+  const onPushHandler = (e: CustomEvent<Query>) => {
+    if (typeof onPushState === 'function') onPushState(e)
+    setChanged({
+      timestamp: new Date()
+    })
+  }
+
+  useEffect(() => {
+    document.addEventListener<any>(
+      EVENT_PUSH_STATE,
+      onPushHandler,
+      false
+    )
+    return () => {
+      document.removeEventListener<any>(EVENT_PUSH_STATE, onPushHandler)
+    }
+  }, [])
+
+  return changed
+}
+
 interface RouterProps {
   children: JSX.Element,
 }
 
 export const Router = ({ children }: RouterProps) => {
   const dispatch = useAppDispatch()
-
   const onPushState = useCallback((e: CustomEvent<Query>) => {
     const query: Query = e.detail.state
-    console.log('onPushState', query)
     dispatch(fetchCharacters({
       query
     }))
-  }, [])
-
-  useEffect(() => {
-    console.log('init onPushState listener')
-    document.addEventListener<any>(
-      EVENT_PUSH_STATE,
-      onPushState,
-      false
-    )
-    return () => {
-      console.log("removed onpushstate")
-      document.removeEventListener<any>(EVENT_PUSH_STATE, onPushState)
-    }
-  }, [])
+  }, [])  
+  
+  useRouteChange({ onPushState })
 
   return (
     <>
