@@ -2,6 +2,7 @@ import React, { useState, useEffect }  from 'react'
 import { useDisplayState, useSetDisplay } from './Context/Display';
 import { Details } from "./Components/Details";
 import { Query } from './redux/slices/characterSlice';
+import { pushState } from './Components/Router'
 import logoImg from './images/logo.svg'
 import iconMenu from './images/icon-menu.svg';
 import iconClose from './images/close.svg'
@@ -41,13 +42,23 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
     })
   }
 
+  const goHome = () => {
+    pushState({
+      state: {
+        page: 1,
+      },
+      title: `Root`,
+      url: `/`,
+    })
+  }
+
   return (
     <div className="w-full">
       <div className="shadow-sm md:shadow-none bg-white w-full z-50 flex justify-center items-center h-14 md:h-16 fixed md:relative md:top-0">
         <div className={`${display.details && 'hidden'} absolute inset-y-0 left-0 w-16 h-16 md:hidden`} onClick={menuToggle}>
           <img className="p-5 h14" src={iconMenu} alt="Menu" />
         </div>
-        <img className="h-14" src={logoImg} alt="Logo" />
+        <img className="h-14" src={logoImg} alt="Logo" onClick={goHome} />
       </div>
       <div className="px-1 md:px-5 w-full max-w-screen-2xl mx-auto md:pt-5">
         <div className="md:flex">

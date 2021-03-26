@@ -97,19 +97,40 @@ export const Pagination = ({ filters, page, total, range, }: Pagination) => {
 
       setCurrentIndex(idx)
 
+      const search = getRouteSearchQuery({})
+
       pushState({
         state: {
+          ...search,
           page: idx,
         },
         title: `Page ${idx}`,
-        url: `/page/${idx}`,
+        url: `/page/${idx}${window.location.search}`,
       })
     })(idx)
-  }, [pages, page])
+  }, [pages, page, total, range])
 
   useEffect(() => {
-    pageHandler(page)
+    const pages = paginator({
+      total,
+      range,
+      currentIndex
+    })
+    // reposition only, in range of lookup numbers
+    setCurrentIndex(page)
   }, [page])
+
+  useEffect(() => {
+    if (window.location.pathname === "/") {
+      const pages = paginator({
+        total,
+        range,
+        currentIndex: page
+      })
+      // Rehydate
+      setPages(pages)
+    }
+  }, [window.location.pathname, page])
 
   useEffect(() => {
     try {
