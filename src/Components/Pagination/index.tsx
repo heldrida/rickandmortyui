@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { paginator } from '../../utils/pagination';
 import { arrowDisableStyleHandler } from "../../utils/pagination";
 import { useAppDispatch } from '../../redux/hooks'
-import { fetchCharacters, Query } from '../../redux/slices/characterSlice'
+import { fetchCharacters, Query, Gender, Status } from '../../redux/slices/characterSlice'
 import { useDisplayState } from '../../Context/Display'
 
 enum PaginationActions {
@@ -20,8 +20,8 @@ export const Pagination = ({ total, range, }: Pagination) => {
   const [currentIndex, setCurrentIndex] = useState<number>(1)
   const [pages, setPages] = useState<number[]>([])
   const [filterByName, setFilterByName] = useState<string | undefined>(undefined)
-  const [filterByStatus, setFilterByStatus] = useState<string | undefined>(undefined)
-  const [filterByGender, setFilterByGender] = useState<string | undefined>(undefined)
+  const [filterByStatus, setFilterByStatus] = useState<Status | undefined>(undefined)
+  const [filterByGender, setFilterByGender] = useState<Gender | undefined>(undefined)
   const dispatch = useAppDispatch()
   const display = useDisplayState()
 
@@ -86,8 +86,6 @@ export const Pagination = ({ total, range, }: Pagination) => {
         status: filterByStatus,
       }
     }
-
-    console.log("new query", query)
 
     dispatch(fetchCharacters({ query }))
     setCurrentIndex(idx)

@@ -26,7 +26,7 @@ export interface Info {
   prev: number
 }
 
-interface InitialState {
+export interface InitialState {
   error: string | unknown | undefined,
   loading: boolean,
   info: Info | undefined,
@@ -47,7 +47,7 @@ export enum Status {
 }
 
 export interface Query extends Record<string, any> {
-  gender?: Gender
+  gender?: Gender,
   name?: string,
   page: number,
   status?: Status,

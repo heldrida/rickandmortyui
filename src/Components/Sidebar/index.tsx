@@ -2,20 +2,23 @@ import React, { useEffect, useState } from 'react'
 import { fetchCharacters, Query, Gender, Status } from '../../redux/slices/characterSlice'
 import { useAppDispatch } from '../../redux/hooks'
 import { useSetDisplay } from '../../Context/Display'
+import { Button } from '../Button';
 
 const commonInputClass = "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 
 interface InputFilterProps {
   callback: any,
   placeholder: string,
+  value?: string,
 }
 
-const InputFilter: React.FC<InputFilterProps> = ({ callback, placeholder }) => (
+const InputFilter: React.FC<InputFilterProps> = ({ callback, placeholder, value }) => (
   <input
     className={commonInputClass}
     type="text"
     placeholder={placeholder}
-    onChange={callback} />
+    onChange={callback}
+    value={value} />
 )
 
 interface SelectFilterProps {
@@ -69,10 +72,12 @@ export const Sidebar = () => {
     })
   }, [filterByName, filterByGender, filterByStatus])
 
+  const reset = () => [setFilterByGender, setFilterByName, setFilterByStatus].forEach(fn => fn(undefined))
+
   return (
     <div className="px-4 md:px-0">
       <div className="mb-8">
-        <InputFilter placeholder="Filter by name" callback={(evt) => setFilterByName(evt.target.value)} />
+        <InputFilter value={filterByName || ""} placeholder="Filter by name" callback={(evt) => setFilterByName(evt.target.value)} />
       </div>
       <div className="mb-8">
         <SelectFilter options={Object.values(Status)} selected={filterByStatus} placeholder="Status" callback={(evt) => setFilterByStatus(evt.target.value)} />
@@ -80,6 +85,10 @@ export const Sidebar = () => {
       <div className="mb-8">
         <SelectFilter options={Object.values(Gender)} selected={filterByGender} placeholder="Gender" callback={(evt) => setFilterByGender(evt.target.value)} />
       </div>
+      {
+        Object.values([filterByName, filterByStatus, filterByGender]).filter(val => val).length > 0 &&
+        <Button placeholder="Clear" callback={reset} /> 
+      }
     </div>
   )
 }
