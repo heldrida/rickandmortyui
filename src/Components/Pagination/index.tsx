@@ -97,7 +97,9 @@ export const Pagination = ({ filters, page, total, range, }: Pagination) => {
 
       setCurrentIndex(idx)
 
-      const search = getRouteSearchQuery({})
+      const search = getRouteSearchQuery({
+        fallbackValue: []
+      })
 
       pushState({
         state: {

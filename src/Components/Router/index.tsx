@@ -47,9 +47,10 @@ export const getRouteValue = ({ callback, fallbackValue, name, pathname = window
 
 interface getRouteSearchQuery {
   search?: string,
+  fallbackValue?: any,
 }
 
-export const getRouteSearchQuery = ({ search = window.location.search }: getRouteSearchQuery) => {
+export const getRouteSearchQuery = ({ fallbackValue, search = window.location.search }: getRouteSearchQuery) => {
   const qs: Record<string, string> = search.replace('?', '')
    .split('&')
    .reduce((acc: Record<string, string>, curr: string) => {
@@ -60,6 +61,8 @@ export const getRouteSearchQuery = ({ search = window.location.search }: getRout
 
   if (Object.keys(qs).length > 0) {
     return qs
+  } else if (fallbackValue) {
+    return fallbackValue
   } else {
     throw new Error(`GetRouteSearchQuery failure: invalid request!`);
   }

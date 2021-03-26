@@ -78,5 +78,15 @@ describe('Router', () => {
   
       expect(cb).toThrow('GetRouteSearchQuery failure: invalid request!')
     });
+
+    test('provides fallback value on failure', () => {
+      const expected: string[] = []
+      const result = getRouteSearchQuery({
+        search: '',
+        fallbackValue: []
+      })
+  
+      expect(expected).toEqual(result);
+    });
   })
 })
