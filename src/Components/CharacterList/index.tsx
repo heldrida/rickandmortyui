@@ -54,8 +54,8 @@ export const CharacterList = () => {
       }
       <>
         {
-          characterResults.info?.count &&
           list.length > 0 &&
+          characterResults.info?.count &&
           characterResults.info?.pages > 1 &&          
           <div className="w-full pt-5 pb-5 pr-1">
             <Pagination total={characterResults.info?.pages} range={5} />

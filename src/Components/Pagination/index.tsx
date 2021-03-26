@@ -98,7 +98,7 @@ export const Pagination = ({ total, range, }: Pagination) => {
       currentIndex,
     })
     setPages(pages)
-  }, [])
+  }, [total])
 
   useEffect(() => {
     const { query } = display
@@ -111,7 +111,6 @@ export const Pagination = ({ total, range, }: Pagination) => {
     if (query?.status) {
       setFilterByStatus(query.status)
     }
-    console.log("on display query", query)
   }, [display])
 
   return (
