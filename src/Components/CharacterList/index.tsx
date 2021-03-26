@@ -28,7 +28,10 @@ export const CharacterList = () => {
     // Shallow validation
     if (Array.isArray(results)) {
       setList(results)
-      setPage((getRouteValue({ name: 'page', fallbackValue: 1 })))
+      // The uri returns a string
+      setPage(
+        parseInt(getRouteValue({ name: 'page', fallbackValue: 1 }))
+      )
     }
   }, [characterResults])
 
