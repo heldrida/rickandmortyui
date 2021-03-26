@@ -12,7 +12,6 @@ export interface Character extends Record<string, number | string | string[] | C
   name: string,
   status: string,
   species: string,
-  type: string,
   gender: string,
   origin: CharacterOrigin,
   created: string,
@@ -47,6 +46,17 @@ export enum Status {
   Unknown = "unknown",
 }
 
+export interface Query extends Record<string, any> {
+  gender?: Gender
+  name?: string,
+  page: number,
+  status?: Status,
+}
+
+interface FetchCharactersArgs {
+  query: Query,
+}
+
 const initialState: InitialState = {
   error: undefined,
   loading: false,
@@ -57,9 +67,12 @@ const initialState: InitialState = {
 // GET Characters
 export const fetchCharacters = createAsyncThunk(
   'character/fetchCharacters',
-  async (_, { rejectWithValue }) => {
+  async ({ query }: FetchCharactersArgs, { rejectWithValue }) => {
     try {
-      const response = await getCharacters(APP_ENDPOINTS.character)
+      let endpoint = `${APP_ENDPOINTS.character}`
+      const queryParams = Object.keys(query).map(property => `${property}=${query[property]}`)
+      endpoint += `?${queryParams.join('&')}`
+      const response = await getCharacters(endpoint)
       return response.data as InitialState;
     } catch (error) {
       let errorMessage = "Internal Server Error";

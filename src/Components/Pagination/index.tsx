@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { paginator } from '../../utils/pagination';
 import { arrowDisableStyleHandler } from "../../utils/pagination";
-
-const mockRequestPageIdx = (idx: number) => console.warn("request page idx", idx)
+import { useAppDispatch } from '../../redux/hooks'
+import { fetchCharacters } from '../../redux/slices/characterSlice'
 
 enum PaginationActions {
   Expand = -1,
@@ -18,6 +18,8 @@ interface Pagination {
 export const Pagination = ({ total, range, }: Pagination) => {
   const [currentIndex, setCurrentIndex] = useState<number>(1)
   const [pages, setPages] = useState<number[]>([])
+  const dispatch = useAppDispatch()
+
   const defaultStyle = "align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-xs text-gray-600 dark:text-gray-400 focus:outline-none border border-transparent active:bg-transparent hover:bg-gray-100 focus:shadow-outline-gray dark:hover:bg-gray-500 dark:hover:text-gray-300 dark:hover:bg-opacity-10"
   const activeStyle = "align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-xs text-white bg-green-400 border border-transparent active:bg-green-400 hover:bg-green-700 focus:shadow-outline-purple"
 
@@ -55,7 +57,11 @@ export const Pagination = ({ total, range, }: Pagination) => {
       setPages(pages)
     }
 
-    mockRequestPageIdx(idx)
+    dispatch(fetchCharacters({
+      query: {
+        page: idx
+      }
+    }))
     setCurrentIndex(idx)
   }
 
@@ -90,12 +96,11 @@ export const Pagination = ({ total, range, }: Pagination) => {
               } else {
                 return (
                   <li key={idx}>
-                    <button
+                    <span
                       className={pageNumber == currentIndex ? activeStyle : defaultStyle}
-                      type="button"
                       onClick={() => pageHandler(pageNumber)}>
                         {pageNumber}
-                    </button>
+                    </span>
                   </li>                  
                 )
               }

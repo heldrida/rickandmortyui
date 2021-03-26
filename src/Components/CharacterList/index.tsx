@@ -16,7 +16,11 @@ export const CharacterList = () => {
   const [list, setList] = useState<Character[]>([])
 
   useEffect(() => {
-    dispatch(fetchCharacters())
+    dispatch(fetchCharacters({
+      query: {
+        page: 1
+      }
+    }))
   }, [])
 
   useEffect(() => {
@@ -48,16 +52,16 @@ export const CharacterList = () => {
               list.map((props, idx) => <Card key={idx} {...props} />)
             }
           </div>
-          <>
-            {
-              characterResults.info?.count &&
-              <div className="w-full pt-5 pb-5 pr-1">
-                <Pagination total={characterResults.info?.count} range={5} />
-              </div>
-            }
-          </>
         </>
       }
+      <>
+        {
+          characterResults.info?.count &&
+          <div className="w-full pt-5 pb-5 pr-1">
+            <Pagination total={characterResults.info?.pages} range={5} />
+          </div>
+        }
+      </>
     </>
   )
 }
