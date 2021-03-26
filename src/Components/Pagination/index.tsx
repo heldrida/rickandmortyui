@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useCallback,useState, useEffect } from 'react'
 import { paginator } from '../../utils/pagination';
 import { arrowDisableStyleHandler } from "../../utils/pagination";
-import { useAppDispatch } from '../../redux/hooks'
-import { fetchCharacters, Query, Gender, Status } from '../../redux/slices/characterSlice'
-import { useDisplayState, useSetDisplay } from '../../Context/Display'
+import {  Query, Gender, Status } from '../../redux/slices/characterSlice'
+import { useDisplayState, } from '../../Context/Display'
+import { pushState } from '../../Components/Router'
 
 enum PaginationActions {
   Expand = -1,
@@ -12,96 +12,116 @@ enum PaginationActions {
 }
 
 interface Pagination {
+  filters: number,
   page: number,
   total: number,
   range: number,
 }
 
-export const Pagination = ({ page, total, range, }: Pagination) => {
-  const [currentIndex, setCurrentIndex] = useState<number>(page || 1)
+export const Pagination = ({ filters, page, total, range, }: Pagination) => {
+  const [currentIndex, setCurrentIndex] = useState<number>(page)
   const [pages, setPages] = useState<number[]>([])
   const [filterByName, setFilterByName] = useState<string | undefined>(undefined)
   const [filterByStatus, setFilterByStatus] = useState<Status | undefined>(undefined)
   const [filterByGender, setFilterByGender] = useState<Gender | undefined>(undefined)
-  const dispatch = useAppDispatch()
   const display = useDisplayState()
-  const setDisplay = useSetDisplay()
 
   const defaultStyle = "align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-xs text-gray-600 dark:text-gray-400 focus:outline-none border border-transparent active:bg-transparent hover:bg-gray-100 focus:shadow-outline-gray dark:hover:bg-gray-500 dark:hover:text-gray-300 dark:hover:bg-opacity-10"
   const activeStyle = "align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-xs text-white bg-green-400 border border-transparent active:bg-green-400 hover:bg-green-700 focus:shadow-outline-purple"
 
-  const pageHandler = (idx: number) => {
-    const firstPageIdx = pages[0]
-    const lastPageIdx = pages[range - 1]
-    // When dots, offset the index and update numbers
-    // in any case, makes a page request
-    if (idx < 0) {
-      if (idx == PaginationActions.Expand) {
-        idx = lastPageIdx + 1
-      } else if (idx == PaginationActions.Back) {
-        idx = currentIndex - 1
-      } else if (idx == PaginationActions.Forward) {
-        idx = currentIndex + 1
-      }
-    }
+  const pageHandler = useCallback((idx: number) => {
+    ((idx: number) => {
+      const firstPageIdx = pages[0]
+      const lastPageIdx = pages[range - 1]
 
-    // Rehydate when out of boundaries
-    if (idx < firstPageIdx || idx > lastPageIdx || idx === total) {
-      let override;
-      if (idx == total) {
-        override = total - range
-      } else if (idx < firstPageIdx) {
-        override = firstPageIdx - range
-      } else {
-        override = lastPageIdx + 1
+      // When dots, offset the index and update numbers
+      // in any case, makes a page request
+      if (idx < 0) {
+        if (idx == PaginationActions.Expand) {
+          idx = lastPageIdx + 1
+        } else if (idx == PaginationActions.Back) {
+          idx = currentIndex - 1
+        } else if (idx == PaginationActions.Forward) {
+          idx = currentIndex + 1
+        }
       }
+
+      // Rehydate when out of boundaries
+      if (idx < firstPageIdx || idx > lastPageIdx || idx === total) {
+        let override;
+        if (idx == total) {
+          override = total - range
+        } else if (idx < firstPageIdx) {
+          override = firstPageIdx - range
+        } else {
+          override = lastPageIdx + 1
+        }
+
+        try {
+          const pages = paginator({
+            total,
+            range,
+            currentIndex: Math.max(override, 1)
+          })
+          // Rehydate
+          setPages(pages)
+        } catch (err) {
+          console.warn(err)
+        }
+      }
+
+      let query: Query = {
+        page: idx
+      }
+
+      if (filterByName) {
+        query = {
+          ...query,
+          name: filterByName
+        }
+      }
+  
+      if (filterByGender) {
+        query = {
+          ...query,
+          gender: filterByGender
+        }
+      }
+  
+      if (filterByStatus) {
+        query = {
+          ...query,
+          status: filterByStatus,
+        }
+      }
+
+      setCurrentIndex(idx)
+
+      pushState({
+        state: {
+          page: idx,
+        },
+        title: `Page ${idx}`,
+        url: `/page/${idx}`,
+      })
+    })(idx)
+  }, [pages, page])
+
+  useEffect(() => {
+    pageHandler(page)
+  }, [page])
+
+  useEffect(() => {
+    try {
       const pages = paginator({
         total,
         range,
-        currentIndex: Math.max(override, 1)
+        currentIndex,
       })
-      // Rehydate
       setPages(pages)
+    } catch (err) {
+      console.warn(err)
     }
-
-    let query: Query = {
-      page: idx
-    }
-
-    if (filterByName) {
-      query = {
-        ...query,
-        name: filterByName
-      }
-    }
-
-    if (filterByGender) {
-      query = {
-        ...query,
-        gender: filterByGender
-      }
-    }
-
-    if (filterByStatus) {
-      query = {
-        ...query,
-        status: filterByStatus,
-      }
-    }
-
-    console.log("Pagination query", query)
-    dispatch(fetchCharacters({ query }))
-    setCurrentIndex(idx)
-    setDisplay({ query })
-  }
-
-  useEffect(() => {
-    const pages = paginator({
-      total,
-      range,
-      currentIndex,
-    })
-    setPages(pages)
   }, [total])
 
   useEffect(() => {
