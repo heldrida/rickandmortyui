@@ -59,7 +59,7 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
         <div className={`${display.details && 'hidden'} absolute inset-y-0 left-0 w-16 h-16 md:hidden cursor-pointer`} onClick={menuToggle}>
           <img className="p-5 h14" src={iconMenu} alt="Menu" />
         </div>
-        <img className="h-14 cursor-pointer" src={logoImg} alt="Logo" onClick={goHome} />
+        <img className="h-14 cursor-pointer transition-opacity transition-transform transform hover:opacity-60 hover:scale-105 duration-300" src={logoImg} alt="Logo" onClick={goHome} />
       </div>
       <div className="px-1 md:px-5 w-full max-w-screen-2xl mx-auto md:pt-5">
         <div className="md:flex">
