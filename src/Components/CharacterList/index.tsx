@@ -4,7 +4,7 @@ import { Pagination } from '../Pagination'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { fetchCharacters } from '../../redux/slices/characterSlice'
 import { Character } from '../../redux/slices/characterSlice'
-import loaderImg from '../../images/loader.svg';
+import { Loader } from '../Loader'
 
 export const CharacterList = () => {
   const {
@@ -43,9 +43,7 @@ export const CharacterList = () => {
     <>
       {
         characterResults.loading &&
-        <div className="flex w-full h-full justify-center align-center">
-          <img className="animate-spin h-20 w-20 opacity-10" src={loaderImg} />
-        </div> ||
+        <Loader /> ||
         <>
           <div className="w-full px-4 m:px-0 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
             {
