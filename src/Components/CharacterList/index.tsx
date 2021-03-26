@@ -41,7 +41,7 @@ export const CharacterList = () => {
         characterResults.loading &&
         <Loader /> ||
         <>
-          <div className="w-full px-4 m:px-0 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+          <div className="w-full px-0 m:px-0 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
             {
               list.map((props, idx) => <Card key={idx} {...props} />)
             }
