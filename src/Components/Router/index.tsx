@@ -35,6 +35,26 @@ export const getRouteValue = ({ name, pathname = window.location.pathname }: Get
   }
 }
 
+interface getRouteSearchQuery {
+  search?: string,
+}
+
+export const getRouteSearchQuery = ({ search = window.location.search }: getRouteSearchQuery) => {
+  const qs: Record<string, string> = search.replace('?', '')
+   .split('&')
+   .reduce((acc: Record<string, string>, curr: string) => {
+     const keyVal = curr.split('=')
+     if (keyVal.length == 2) acc[keyVal[0]] = decodeURI(keyVal[1])
+      return acc
+    }, {})
+
+  if (Object.keys(qs).length > 0) {
+    return qs
+  } else {
+    throw new Error(`GetRouteSearchQuery failure: invalid request!`);
+  }
+}
+
 interface RouterProps {
   children: JSX.Element,
 }

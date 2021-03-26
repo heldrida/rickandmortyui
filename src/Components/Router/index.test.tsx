@@ -1,4 +1,4 @@
-import { getRouteValue } from './';
+import { getRouteValue, getRouteSearchQuery } from './';
 
 describe('Router', () => {
   describe('getRouteValue returns valid data', () => {
@@ -29,6 +29,35 @@ describe('Router', () => {
         })
   
       expect(cb).toThrow('GetRouteValue failure: invalid request named pages')
+    });
+  })
+
+  describe('getRouteSearchQuery returns valid data', () => {
+    test('when there is a valid search query with no special characters', () => {
+      const expected = { name: "peter", gender: "male", status: "alive"}
+      const result = getRouteSearchQuery({
+        search: 'name=peter&gender=male&status=alive'
+      })
+      expect(expected).toEqual(result);
+    })
+
+    test('when there is a valid search query with special white-space characters', () => {
+      const expected = { name: "peter brownies", gender: "male", status: "alive"}
+      const result = getRouteSearchQuery({
+        search: 'name=peter%20brownies&gender=male&status=alive'
+      })
+      expect(expected).toEqual(result);
+    })
+  })
+
+  describe('getRouteSearchQuery when invalid', () => {
+    test('throws unexpected error', () => {
+      const cb = () =>
+        getRouteSearchQuery({
+          search: ''
+        })
+  
+      expect(cb).toThrow('GetRouteSearchQuery failure: invalid request!')
     });
   })
 })
