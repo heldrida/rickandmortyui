@@ -1,25 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { fetchCharacters, Query } from '../../redux/slices/characterSlice'
+import { useAppDispatch } from '../../redux/hooks'
 
 const commonInputClass = "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 
 interface InputFilterProps {
+  callback: any,
   placeholder: string,
 }
 
-const InputFilter: React.FC<InputFilterProps> = ({ placeholder }) => (
+const InputFilter: React.FC<InputFilterProps> = ({ callback, placeholder }) => (
   <input
     className={commonInputClass}
     type="text"
-    placeholder={placeholder} />
+    placeholder={placeholder}
+    onChange={callback} />
 )
 
 interface SelectFilterProps {
+  callback: any,
   placeholder: string,
+  selected: string | undefined,
 }
 
-const SelectFilter: React.FC<SelectFilterProps> = ({ placeholder }) => (
+const SelectFilter: React.FC<SelectFilterProps> = ({ callback, placeholder, selected }) => (
   <div className="inline-block relative w-full">
-    <select className={commonInputClass} value={"default"} >
+    <select className={commonInputClass} value={selected || "default"} onChange={callback}>
       <option value="default" disabled>{placeholder}</option>
       <option>Option 1</option>
       <option>Option 2</option>
@@ -31,16 +37,39 @@ const SelectFilter: React.FC<SelectFilterProps> = ({ placeholder }) => (
 )
 
 export const Sidebar = () => {
+  const dispatch = useAppDispatch()
+
+  const [filterByPage, setFilterByPage] = useState<number>(1)
+  const [filterByName, setFilterByName] = useState<string | undefined>(undefined)
+  const [filterByStatus, setFilterByStatus] = useState<string | undefined>(undefined)
+  const [filterByGender, setFilterByGender] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    const filterObservers: Record<string, any> = {
+      page: filterByPage,
+      name: filterByName,
+      status: filterByStatus,
+      gender: filterByGender,
+    }
+    const query = Object.keys(filterObservers)
+      .filter(key => filterObservers[key])
+      .reduce((acc, key) => {
+        acc[key] = filterObservers[key]
+        return acc
+      }, { page: filterByPage } as Query);    
+    dispatch(fetchCharacters({ query  }))
+  }, [filterByPage, filterByName, filterByGender, filterByStatus])
+
   return (
     <div className="px-4 md:px-0">
       <div className="mb-8">
-        <InputFilter placeholder="Filter by name" />
+        <InputFilter placeholder="Filter by name" callback={(evt) => setFilterByName(evt.target.value)} />
       </div>
       <div className="mb-8">
-        <SelectFilter placeholder="Status" />
+        <SelectFilter selected={filterByStatus} placeholder="Status" callback={(evt) => setFilterByStatus(evt.target.value)} />
       </div>
       <div className="mb-8">
-        <SelectFilter placeholder="Gender" />
+        <SelectFilter selected={filterByGender} placeholder="Gender" callback={(evt) => setFilterByGender(evt.target.value)} />
       </div>
     </div>
   )
