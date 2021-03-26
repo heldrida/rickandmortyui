@@ -15,7 +15,7 @@ export const CharacterList = () => {
   const display = useDisplayState()
 
   const [list, setList] = useState<Character[]>([])
-  const [page, setPage] = useState<string>("1")
+  const [page, setPage] = useState<number>(1)
 
   useEffect(() => {
     const { results, error } = characterResults;
@@ -28,7 +28,7 @@ export const CharacterList = () => {
     // Shallow validation
     if (Array.isArray(results)) {
       setList(results)
-      setPage(getRouteValue({ name: 'page', fallbackValue: "1" }))
+      setPage((getRouteValue({ name: 'page', fallbackValue: 1 })))
     }
   }, [characterResults])
 

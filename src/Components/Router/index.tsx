@@ -22,7 +22,7 @@ export const pushState: (props: PushState) => void = ({ state, title, url }) => 
 }
 
 interface GetRouteValue {
-  fallbackValue?: string,
+  fallbackValue?: any,
   name: string,
   pathname?: string,
 }

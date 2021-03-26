@@ -11,7 +11,7 @@ const App = () => {
     let title = 'root'
     let url = '/'
 
-    const defaultPage = "1"
+    const defaultPage = 1
     const page = getRouteValue({ name: 'page', fallbackValue: defaultPage });
 
     if (page != defaultPage) {
@@ -21,7 +21,7 @@ const App = () => {
 
     pushState({
       state: {
-        page: parseInt(page),
+        page,
       },
       title: `Page ${page}`,
       url: `/page/${page}`,
