@@ -65,9 +65,8 @@ interface RouterProps {
 export const Router = ({ children }: RouterProps) => {
   const dispatch = useAppDispatch()
 
-  // CustomEvent<Query>
-  const onPushState = useCallback((e: any) => {
-    const query: Query = e.detail
+  const onPushState = useCallback((e: CustomEvent<Query>) => {
+    const query: Query = e.detail.state
     console.log('onPushState', query)
     dispatch(fetchCharacters({
       query
@@ -76,14 +75,14 @@ export const Router = ({ children }: RouterProps) => {
 
   useEffect(() => {
     console.log('init onPushState listener')
-    document.addEventListener(
+    document.addEventListener<any>(
       EVENT_PUSH_STATE,
       onPushState,
       false
     )
     return () => {
       console.log("removed onpushstate")
-      document.removeEventListener(EVENT_PUSH_STATE, onPushState)
+      document.removeEventListener<any>(EVENT_PUSH_STATE, onPushState)
     }
   }, [])
 
