@@ -113,26 +113,35 @@ export const Pagination = ({ filters, page, total, range, }: Pagination) => {
   }, [pages, page, total, range])
 
   useEffect(() => {
-    const pages = paginator({
-      total,
-      range,
-      currentIndex
-    })
-    // reposition only, in range of lookup numbers
-    setCurrentIndex(page)
+    try {
+      const pages = paginator({
+        total,
+        range,
+        currentIndex
+      })
+      // reposition only, in range of lookup numbers
+      setCurrentIndex(page)
+    } catch (err) {
+      console.warn(err)
+    }
   }, [page])
 
   useEffect(() => {
     if (window.location.pathname === "/") {
-      const pages = paginator({
-        total,
-        range,
-        currentIndex: page
-      })
-      // Rehydate
-      setPages(pages)
+      try {
+        const pages = paginator({
+          total,
+          range,
+          currentIndex,
+        })
+  
+        // Rehydate
+        setPages(pages)
+      } catch (err) {
+        console.warn(err)
+      }
     }
-  }, [window.location.pathname, page])
+  }, [window.location.pathname, page, total, currentIndex])
 
   useEffect(() => {
     try {

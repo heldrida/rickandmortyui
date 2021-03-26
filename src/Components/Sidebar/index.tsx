@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { fetchCharacters, Query, Gender, Status } from '../../redux/slices/characterSlice'
+import { Query, Gender, Status } from '../../redux/slices/characterSlice'
 import { useAppDispatch } from '../../redux/hooks'
-import { useSetDisplay, useDisplayState } from '../../Context/Display'
+import { useSetDisplay } from '../../Context/Display'
 import { Button } from '../Button'
 import { useDebounce } from '../../utils/hooks'
 import { FILTER_DEBOUNCE_TIMEOUT_MS  } from '../../utils/constants';
-import { getRouteValue, pushState } from '../Router';
+import { pushState } from '../Router';
 
 const commonInputClass = "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 
@@ -46,22 +46,12 @@ const SelectFilter: React.FC<SelectFilterProps> = ({ callback, options, placehol
 )
 
 export const Sidebar = () => {
-  const dispatch = useAppDispatch()
-  const setDisplay = useSetDisplay()
-  // const display = useDisplayState()
-
-  const [page, setPage] = useState<number>(1)
+  const [page] = useState<number>(1)
   const [filterByPage, setFilterByPage] = useState<number>(1)
   const [filterByName, setFilterByName] = useState<string | undefined>(undefined)
   const [filterByStatus, setFilterByStatus] = useState<string | undefined>(undefined)
   const [filterByGender, setFilterByGender] = useState<string | undefined>(undefined)
   const debouncedFilterByName = useDebounce(filterByName, FILTER_DEBOUNCE_TIMEOUT_MS);
-
-  useEffect(() => {
-    setPage(
-      getRouteValue({ name: 'page', fallbackValue: 1, callback: parseInt })
-    )
-  }, [window.location.pathname])
 
   useEffect(() => {
     const filterObservers: Record<string, any> = {
@@ -74,18 +64,10 @@ export const Sidebar = () => {
       .reduce((acc, key) => {
         acc[key] = filterObservers[key]
         return acc
-      }, { page: 1 } as Query);    
+      }, { page } as Query);    
 
       // Only trigger when non-page filters available
       if (Object.keys(query).length > 1) {
-        console.log("sidebar query", query)
-        // dispatch(fetchCharacters({ query  }))
-        // Update user display preferences
-        // since required when paginating filtered by content
-        // setDisplay({
-        //   query
-        // })
-
         pushState({
           state: query,
           title: `Page ${page}`,
@@ -94,7 +76,16 @@ export const Sidebar = () => {
       }
   }, [page, debouncedFilterByName, filterByGender, filterByStatus])
 
-  const reset = () => [setFilterByGender, setFilterByName, setFilterByStatus].forEach(fn => fn(undefined))
+  const reset = () => {
+    [setFilterByGender, setFilterByName, setFilterByStatus].forEach(fn => fn(undefined))
+    pushState({
+      state: {
+        page: 1,
+      },
+      title: 'Root',
+      url: '/',
+    })
+  }
 
   const hasAppliedFilters = useCallback(() => {
     return Object.values([filterByName, filterByStatus, filterByGender]).filter(val => val).length > 0
