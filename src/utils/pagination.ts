@@ -13,8 +13,15 @@ export const paginator: (pagination: Pagination) => number[] = ({
   const last = currentIndex + range
 
   // Validate
-  if (currentIndex >= total || range < 1) {
+  if (currentIndex > total || range < 1) {
     throw new Error("Paginator failure: Unexpected input!");
+  } else if (currentIndex == total) {
+    // Show range
+    return paginator({
+      total,
+      range,
+      currentIndex: currentIndex - range,
+    }) 
   }
 
   // Mutate range when exceeds total
