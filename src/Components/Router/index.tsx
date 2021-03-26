@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
+import { fetchCharacters, Query } from '../../redux/slices/characterSlice'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 
 const EVENT_PUSH_STATE = 'onpushstate'
 
 interface PushState {
-  state?: {},
+  state: Query,
   title: string,
   url: string,
 }
+
 export const pushState: (props: PushState) => void = ({ state, title, url }) => {  
   document.dispatchEvent(new CustomEvent(EVENT_PUSH_STATE, {
     detail: {
@@ -18,8 +21,18 @@ export const pushState: (props: PushState) => void = ({ state, title, url }) => 
   history.pushState(state, title, url)
 }
 
-const onPushState = (e: any) => {
-  console.log("onPushState:", e);
+interface GetRouteValue {
+  name: string,
+  pathname?: string,
+}
+
+export const getRouteValue = ({ name, pathname = window.location.pathname }: GetRouteValue) => {
+  const uri = pathname.split('/').filter(v => v)
+  if (uri.length == 2 && uri[0] === name) {
+    return uri[1]
+  } else {
+    throw new Error(`GetRouteValue failure: invalid request named ${name}`);
+  }
 }
 
 interface RouterProps {
