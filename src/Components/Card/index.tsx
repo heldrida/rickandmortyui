@@ -30,6 +30,7 @@ export const Card: React.FC<Character> = ({
         origin,
         created,
         image,
+        episode,
       }
     })
   }

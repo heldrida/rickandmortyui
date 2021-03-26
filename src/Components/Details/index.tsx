@@ -2,18 +2,40 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '../Button';
 import { useDisplayState } from '../../Context/Display';
 import { Episodes } from '../Episodes';
+import { fetchEpisodes, Episode } from '../../redux/slices/episodeSlice'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 
 interface DetailsProps {
   goBackHandler: () => void
 }
 
-
 export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
+  const {
+    episode: episodeResults,
+  } = useAppSelector(state => state)
   const display = useDisplayState()
+  const dispatch = useAppDispatch()
+  const [list, setList] = useState<Episode[]>([])
+  const [selectedEpisode, setSelectedEpisode] = useState<Episode | undefined>(undefined)
 
   useEffect(() => {
-    console.log("display", display)
-  }, [display])
+    if (Array.isArray(display.character?.episode)) {
+      const endpoints = display.character?.episode.slice(0, 5)
+      if (endpoints) {
+        dispatch(fetchEpisodes(endpoints))
+      }
+    }
+  }, [display]);
+
+  useEffect(() => {
+    const { results } = episodeResults;
+
+    if (Array.isArray(results) && results.length > 0) {
+      setList(results)
+      // Set default state
+      setSelectedEpisode(results[0])
+    }
+  }, [episodeResults])
 
   return (
     <>
@@ -38,9 +60,12 @@ export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
                   }
                 </div>
               </div>
-              <div className="w-full pt-10">
-                <Episodes />
-              </div>
+              {
+                list.length > 0 &&
+                <div className="w-full pt-10">
+                  <Episodes list={list} />
+                </div>
+              }
             </>
           }
         </div>

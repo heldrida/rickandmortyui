@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit'
 import axios from 'axios';
 import { Info } from '../slices/characterSlice';
 
-export interface Episode {
+export interface Episode extends Record<string, any> {
   id: number,
   name: string,
   air_date: string,
