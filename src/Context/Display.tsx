@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react'
 import { useContextCreator } from "./";
-import { Character } from '../redux/slices/characterSlice';
+import { Character, Query } from '../redux/slices/characterSlice';
 
 interface DisplayMode {
   character?: Character,
-  details: boolean,
+  details?: boolean,
+  query?: Query,
 }
 
 interface DispatchDisplayMode {
