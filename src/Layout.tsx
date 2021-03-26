@@ -55,7 +55,7 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
   return (
     <div className="w-full">
       <div className="shadow-sm md:shadow-none bg-white w-full z-50 flex justify-center items-center h-14 md:h-16 fixed md:relative md:top-0">
-        <div className={`${display.details && 'hidden'} absolute inset-y-0 left-0 w-16 h-16 md:hidden`} onClick={menuToggle}>
+        <div className={`${display.details && 'hidden'} absolute inset-y-0 left-0 w-16 h-16 md:hidden cursor-pointer`} onClick={menuToggle}>
           <img className="p-5 h14" src={iconMenu} alt="Menu" />
         </div>
         <img className="h-14 cursor-pointer" src={logoImg} alt="Logo" onClick={goHome} />

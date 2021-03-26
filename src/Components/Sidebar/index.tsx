@@ -33,7 +33,7 @@ interface SelectFilterProps {
 
 const SelectFilter: React.FC<SelectFilterProps> = ({ callback, options, placeholder, selected }) => (
   <div className="inline-block relative w-full">
-    <select className={commonInputClass} value={selected || "default"} onChange={callback}>
+    <select className={`${commonInputClass} cursor-pointer`} value={selected || "default"} onChange={callback}>
       <option value="default" disabled>{placeholder}</option>
       {
         options.map((val, idx) => <option key={idx} value={val}>{val}</option>)
