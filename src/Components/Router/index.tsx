@@ -25,13 +25,20 @@ interface GetRouteValue {
   fallbackValue?: any,
   name: string,
   pathname?: string,
+  callback?: (param: any) => void
 }
 
-export const getRouteValue = ({ fallbackValue, name, pathname = window.location.pathname }: GetRouteValue) => {
+export const getRouteValue = ({ callback, fallbackValue, name, pathname = window.location.pathname }: GetRouteValue) => {
   const uri = pathname.split('/').filter(v => v)
   if (uri.length == 2 && uri[0] === name) {
+    if (typeof callback === 'function') {
+      return callback(uri[1])
+    }
     return uri[1]
   } else if (fallbackValue) {
+    if (typeof callback === 'function') {
+      return callback(fallbackValue)
+    }
     return fallbackValue
   } else {
     throw new Error(`GetRouteValue failure: invalid request named ${name}`);

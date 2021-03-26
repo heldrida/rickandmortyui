@@ -12,10 +12,10 @@ const App = () => {
     let url = '/'
 
     const defaultPage = 1
-    const page = getRouteValue({ name: 'page', fallbackValue: defaultPage });
+    const page = getRouteValue({ name: 'page', fallbackValue: defaultPage, callback: parseInt });
 
     // Parse page (as URI is string)
-    if (parseInt(page) !== defaultPage) {
+    if (page !== defaultPage) {
       title = `Page ${page}` 
       url = `/page/${page}`
     }

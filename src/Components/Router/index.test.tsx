@@ -27,6 +27,16 @@ describe('Router', () => {
       })
       expect(expected).toEqual(result);
     })
+    test('when a callback is passed, computes the value', () => {
+      const expected = "Hello 123"
+      const result = getRouteValue({
+        name: 'page',
+        pathname: '',
+        fallbackValue: "1",
+        callback: (val: string) => 'Hello 123'
+      })
+      expect(expected).toEqual(result);
+    })
   })
 
   describe('getRouteValue when invalid', () => {

@@ -30,7 +30,7 @@ export const CharacterList = () => {
       setList(results)
       // The uri returns a string
       setPage(
-        parseInt(getRouteValue({ name: 'page', fallbackValue: 1 }))
+        parseInt(getRouteValue({ name: 'page', fallbackValue: 1, callback: parseInt }))
       )
     }
   }, [characterResults])
