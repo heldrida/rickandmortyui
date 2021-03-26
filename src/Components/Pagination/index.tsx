@@ -3,7 +3,7 @@ import { paginator } from '../../utils/pagination';
 import { arrowDisableStyleHandler } from "../../utils/pagination";
 import {  Query, Gender, Status } from '../../redux/slices/characterSlice'
 import { useDisplayState, } from '../../Context/Display'
-import { pushState } from '../../Components/Router'
+import { pushState, getRouteSearchQuery } from '../../Components/Router'
 
 enum PaginationActions {
   Expand = -1,
