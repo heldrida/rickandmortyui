@@ -1,6 +1,7 @@
 import React, { useState, useEffect }  from 'react'
 import { useDisplayState, useSetDisplay } from './Context/Display';
 import { Details } from "./Components/Details";
+import { Query } from './redux/slices/characterSlice';
 import logoImg from './images/logo.svg'
 import iconMenu from './images/icon-menu.svg';
 import iconClose from './images/close.svg'
@@ -34,7 +35,11 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
   }, [transition]);
 
   const menuToggleHandler = () => setMenuOpen(false)
-  const goBackHandler = () => setDisplay({ details: false })
+  const goBackHandler = (query: Query) => {
+    setDisplay({
+      query
+    })
+  }
 
   return (
     <div className="w-full">

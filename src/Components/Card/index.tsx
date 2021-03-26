@@ -1,5 +1,5 @@
-import React from 'react'
-import { useSetDisplay } from '../../Context/Display'
+import React, { useCallback } from 'react'
+import { useSetDisplay, useDisplayState } from '../../Context/Display'
 import { Button } from '../Button'
 import { Character } from '../../redux/slices/characterSlice';
 
@@ -16,8 +16,10 @@ export const Card: React.FC<Character> = ({
   episode,
 }) => {
   const setDisplay = useSetDisplay()
+  const display = useDisplayState()
 
-  const onDetails = () => {
+  const onDetails = useCallback(() => {
+    console.log("card:display.query", display.query)
     setDisplay({
       details: true,
       character: {
@@ -31,9 +33,10 @@ export const Card: React.FC<Character> = ({
         created,
         image,
         episode,
-      }
+      },
+      query: display.query || { page: 1 },
     })
-  }
+  }, [display])
 
   return (
     <>

@@ -9,3 +9,5 @@ export const APP_ENDPOINTS: AppEndpoints = {
 }
 
 export const CACHE_TTL = 24 * 60 * 1000
+
+export const FILTER_DEBOUNCE_TIMEOUT_MS = 200

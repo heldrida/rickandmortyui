@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { Button } from '../Button';
 import { useDisplayState } from '../../Context/Display';
 import { Episodes } from '../Episodes';
 import { fetchEpisodes, Episode } from '../../redux/slices/episodeSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { Loader } from '../Loader'
+import { Query } from '../../redux/slices/characterSlice';
 
 interface DetailsProps {
-  goBackHandler: () => void
+  goBackHandler: (params: Query) => void
 }
 
 export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
@@ -20,6 +21,7 @@ export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
   const [selectedEpisode, setSelectedEpisode] = useState<Episode | undefined>(undefined)
 
   useEffect(() => {
+    console.log("details:display:::", display)
     if (Array.isArray(display.character?.episode)) {
       const endpoints = display.character?.episode.slice(0, 5)
       if (endpoints) {
@@ -38,11 +40,18 @@ export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
     }
   }, [episodeResults])
 
+  const callback = useCallback(() => {
+    if (display.query) {
+      console.log("details callback:display.query", display.query)
+      goBackHandler(display.query)
+    }
+  }, [display])
+
   return (
     <>
       <div className="md:flex w-full pt-20 px-4 md:pt-0 mx-auto max-w-screen-lg">
         <div className="md:w-1/6">
-          <Button placeholder="Go back" callback={goBackHandler} />
+          <Button placeholder="Go back" callback={callback} />
         </div>
         <div className="md:w-5/6">
           {

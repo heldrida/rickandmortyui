@@ -27,7 +27,7 @@ export const Episodes = ({ list }: { list: Episode[] }) => {
         {
           Object.keys(list[activeTab])
             .filter(key => desiredKeyValues.includes(key))
-            .map(key => <p>{list[activeTab][key]}</p>)
+            .map((key, idx) => <p key={idx}>{list[activeTab][key]}</p>)
         }
       </div>
     </div>
