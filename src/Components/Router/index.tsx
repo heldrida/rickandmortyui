@@ -22,14 +22,17 @@ export const pushState: (props: PushState) => void = ({ state, title, url }) => 
 }
 
 interface GetRouteValue {
+  fallbackValue?: string,
   name: string,
   pathname?: string,
 }
 
-export const getRouteValue = ({ name, pathname = window.location.pathname }: GetRouteValue) => {
+export const getRouteValue = ({ fallbackValue, name, pathname = window.location.pathname }: GetRouteValue) => {
   const uri = pathname.split('/').filter(v => v)
   if (uri.length == 2 && uri[0] === name) {
     return uri[1]
+  } else if (fallbackValue) {
+    return fallbackValue
   } else {
     throw new Error(`GetRouteValue failure: invalid request named ${name}`);
   }

@@ -18,6 +18,15 @@ describe('Router', () => {
       })
       expect(expected).toEqual(result);
     })
+    test('when pathname is empty provides a fallback value', () => {
+      const expected = "1"
+      const result = getRouteValue({
+        name: 'page',
+        pathname: '',
+        fallbackValue: "1",
+      })
+      expect(expected).toEqual(result);
+    })
   })
 
   describe('getRouteValue when invalid', () => {
