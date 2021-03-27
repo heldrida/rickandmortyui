@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Query, Gender, Status } from '../../redux/slices/characterSlice'
+import { generateCharacterQuery, Query, Gender, Status } from '../../redux/slices/characterSlice'
 import { Button } from '../Button'
 import { pushState } from '../Router';
 import { querySearchTerms } from '../../utils/url'
@@ -71,31 +71,23 @@ const initialFilterState: Filter = {
   name: undefined,
   status: undefined,
 }
-let title = 'Root'
-let url = '/'
-let state = { page: 1 }
-
 
 export const Sidebar = () => {
   const page = 1
-  const [filter, setFilter] = useState<Filter>(initialFilterState)
+  const [filter, setFilter] = useState<Filter | undefined>(undefined)
   const debouncedFilter = useDebounce(filter, FILTER_DEBOUNCE_TIMEOUT_MS)
 
   useEffect(() => {
-    const keys = getKeys(filter)
-    const query = keys
-      .filter(key => filter[key])
-      .reduce((acc: Query, key) => {
-        if (acc && filter && key && filter[key]) {
-          acc[key] = filter[key]
-        }
-        return acc
-      }, { page } as Query);    
+    if (!filter) return
+
+    let title = 'Root'
+    let url = '/'
+    let state = { page: 1 }
+    state = generateCharacterQuery(page, filter)
 
     // Only trigger when non-page filters available
     // otherwise, request default
-    if (Object.keys(query).length > 1) {
-      state = query
+    if (Object.keys(state).length > 1) {
       title = `Page ${page}`
       url = `/page/${page}?${querySearchTerms(filter)}`
     }
@@ -109,7 +101,7 @@ export const Sidebar = () => {
 
   // Helpers
   const hasAppliedFilters = useCallback(() =>
-    Object.values(filter).filter(val => val).length > 0,
+    filter && Object.values(filter).filter(val => val).length > 0,
   [filter])
   
   const setFilterHandler = useCallback((name: string, value: string) => {
@@ -129,7 +121,7 @@ export const Sidebar = () => {
       <div className="mb-8">
         <InputFilter
           name="name"
-          value={filter.name || ""}
+          value={filter && filter.name || ""}
           placeholder="Filter by name"
           callback={setFilterHandler} />
       </div>
@@ -137,7 +129,7 @@ export const Sidebar = () => {
         <SelectFilter
           name="status"
           options={Object.values(Status)}
-          selected={filter.status}
+          selected={filter && filter.status}
           placeholder="Status"
           callback={setFilterHandler} />
       </div>
@@ -145,7 +137,7 @@ export const Sidebar = () => {
         <SelectFilter
           name="gender"
           options={Object.values(Gender)}
-          selected={filter.gender}
+          selected={filter && filter.gender}
           placeholder="Gender"
           callback={setFilterHandler} />
       </div>

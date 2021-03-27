@@ -38,9 +38,10 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
 
   const menuToggleHandler = () => setMenuOpen(false)
   const goBackHandler = (query: Query) => {
-    setDisplay({
-      query
-    })
+    // setDisplay({
+    //   query
+    // })
+    history.back()
   }
 
   const goHome = () => {

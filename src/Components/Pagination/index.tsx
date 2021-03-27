@@ -128,6 +128,11 @@ export const Pagination = ({ filters, page, total, range, }: Pagination) => {
   }, [page])
 
   useEffect(() => {
+    console.log('Pagination: page change', {
+      routeChange, page,
+       total, currentIndex,
+    })
+    
     if (window.location.pathname === "/") {
       try {
         const pages = paginator({
@@ -142,7 +147,7 @@ export const Pagination = ({ filters, page, total, range, }: Pagination) => {
         console.warn(err)
       }
     }
-  }, [routeChange, page, total, currentIndex])
+  }, [page, total, currentIndex])
 
   useEffect(() => {
     try {

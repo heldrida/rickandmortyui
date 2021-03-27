@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { APP_ENDPOINTS } from '../../utils/constants';
 import { getCharacters } from '../../utils/api'
+import { getKeys } from '../../utils/object'
 
 interface CharacterOrigin {
   name: string,
@@ -110,3 +111,14 @@ export const characterSlice = createSlice({
     })
   },
 })
+
+export const generateCharacterQuery = (page: number, search: {}) => {
+  const keys = getKeys((search))
+  const state = keys
+    .filter(key => search[key])
+    .reduce((acc: Query, key) => {
+      acc[key] = search[key]
+      return acc
+    }, { page } as Query)
+  return state
+}

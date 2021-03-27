@@ -1,4 +1,9 @@
-import { getRouteValue, getRouteSearchQuery } from './';
+import {
+  getRouteValue,
+  getRouteSearchQuery,
+  pathnameMatchReplacer,
+  extractRouteParams,
+} from './';
 
 describe('Router', () => {
   describe('getRouteValue returns valid data', () => {
@@ -88,5 +93,36 @@ describe('Router', () => {
   
       expect(expected).toEqual(result);
     });
+  })
+})
+
+describe('PathnameMatchReplacer returns valid data', () => {
+  test('when there are corresponding matches', () => {
+    const expected = "/page/([0-9].*)"
+    const result = pathnameMatchReplacer("/page/:num")
+    expect(result).toBe(expected)
+  })
+  test('when there\'re no matches', () => {
+    const expected = "/page/page/:nope"
+    const result = pathnameMatchReplacer("/page/page/:nope")
+    expect(result).toBe(expected)
+  })
+  test('when there\'s a typo', () => {
+    const expected = "/page/:nums"
+    const result = pathnameMatchReplacer("/page/:nums")
+    expect(result).toBe(expected)
+  })
+})
+
+describe('ExtractRouteParams provides the parameters', () => {
+  test('when the path is simple', () => {
+    const expected = { page: 1 }
+    const result = extractRouteParams('/page/1')
+    expect(result).toBe(result)
+  })
+  test('when the path has a search query', () => {
+    const expected = { page: 7 }
+    const result = extractRouteParams('/page/7?name=bob&status=unknown&gender=female')
+    expect(result).toBe(result)
   })
 })

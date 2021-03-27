@@ -3,9 +3,31 @@ import { Layout } from './Layout'
 import { CharacterList } from './Components/CharacterList'
 import { Sidebar } from './Components/Sidebar'
 import { DisplayProvider } from './Context/Display'
-import { getRouteValue, Router, pushState } from './Components/Router'
+import { getRouteValue, getRouteSearchQuery, Router, pushState } from './Components/Router'
+import { generateCharacterQuery, fetchCharacters, Query } from './redux/slices/characterSlice'
+import { useAppDispatch } from './redux/hooks'
+import { getKeys } from './utils/object'
 
 const App = () => {
+  const dispatch = useAppDispatch()
+  const pageHandler = (urlParams: Record<string, string | {}>) => {
+    const page = (urlParams.page as number)
+    const { search } = urlParams
+    let state = ({ page } as Query)
+    state = generateCharacterQuery(page, search)
+    console.log('App state', state)
+    dispatch(fetchCharacters({
+      query: state
+    }))
+  }
+  // Designate the role for each route
+  // as a friendly pathname + callback handler
+  // the usecase is a basic relation between
+  // base route and value `/key/value` e.g. `/page/1`
+  const routes = {
+    '/': pageHandler,
+    '/page/:num': pageHandler
+  }
   useEffect(() => {
     let param = {}
     let title = 'root'
@@ -31,7 +53,7 @@ const App = () => {
 
   return (
     <DisplayProvider>
-      <Router>
+      <Router routes={routes}>
         <Layout
           sidebar={<Sidebar/>}
           content={<CharacterList/>}
