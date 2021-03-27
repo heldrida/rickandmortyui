@@ -46,7 +46,7 @@ export enum Status {
   Unknown = "unknown",
 }
 
-export interface Query extends Record<string, any> {
+export interface Query extends Record<string, string | number | undefined> {
   gender?: Gender,
   name?: string,
   page: number,
