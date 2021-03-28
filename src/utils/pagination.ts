@@ -20,7 +20,7 @@ export const paginator: (pagination: Pagination) => number[] = ({
     return paginator({
       total,
       range,
-      currentIndex: currentIndex - range,
+      currentIndex: Math.max(1, currentIndex - range),
     }) 
   }
 

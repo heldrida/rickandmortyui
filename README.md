@@ -10,9 +10,11 @@
 
 This project implements a user interface for the Rick and Morty [API](https://rickandmortyapi.com/documentation), using Reactjs (Typescript, ReduxToolkit, Hooks), and Axios.
 
-It's as an experimental project to test the brillian work of [evanw](https://github.com/evanw/esbuild) on [esbuild](https://esbuild.github.io/), although primarily used as a webpack loader, since opted to use Webpack dev server for [HMR](https://webpack.js.org/guides/hot-module-replacement/), as otherwise it'd require some extra work.
+It's as an experimental project, that tests the brillian work of [evanw](https://github.com/evanw/esbuild) on [esbuild](https://esbuild.github.io/) (although primarily used as a webpack loader, since opted to use Webpack dev server for [HMR](https://webpack.js.org/guides/hot-module-replacement/), as otherwise it'd require some extra work) and provides a ground to implement some common features.
 
-Also, a test-drive for Tailwindcss, used in the project by css class composition.
+Also, a test-drive for [Tailwindcss](https://tailwindcss.com/), used in the project as a utility-based CSS framework - it seems to have a lot of traction nowadays, although after years of modern FE devs bashing on older class based and inheritance practices.
+
+Lastly, used the project as a development ground to implement and experiment the creation of a `<Router />`, while we have battle tested libraries for this purpose, as the commonly used [React-router](https://github.com/ReactTraining/react-router), I non-regretly gave it a go: hooks, history pushstate, human readable routes with slugs, regex route support, etc! You'll also find other implementations, that are usually picked from stablished packages, such as a `<Pagination/>`, etc.
 
 ## Specs
 
@@ -35,9 +37,9 @@ The goals for the project are simple:
       - Selectable episodes (max. of 5 episode tabs)
       - Selected episode details
 
-It **DOES NOT** try to fullfil every use-case (preserve history, e.g. navigation history pushstate, server-side middleware to mitigate CORS (it assumes our address is whitelisted by the target endpoint), e2e testing, distribution optimisation, tailwind postcss integration (used the CDN version), etc). 
+It **DOES NOT** try to fullfil every use-case *(e.g. server-side middleware to mitigate CORS (it assumes our address is whitelisted by the target endpoint), E2E testing, distribution optimisation, tailwind postcss integration [used the CDN version], etc)*. 
 
-Similarily, while it should work, the project was developed on the grounds of webkit (Chrome, Brave) and Firefox latest, use as advised.
+Similarily, while it should work, the project was developed on the grounds of webkit (Chrome, Brave) and Firefox latest, *use as advised*.
 
 ## Requirements
 

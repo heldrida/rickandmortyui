@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { APP_ENDPOINTS } from '../../utils/constants';
 import { getCharacters } from '../../utils/api'
+import { getKeys } from '../../utils/object'
 
-interface CharacterOrigin {
+export interface CharacterOrigin {
   name: string,
   url: string,
 }
@@ -31,6 +32,7 @@ export interface InitialState {
   loading: boolean,
   info: Info | undefined,
   results: Character[],
+  result: Character | undefined,
 }
 
 export enum Gender {
@@ -46,7 +48,7 @@ export enum Status {
   Unknown = "unknown",
 }
 
-export interface Query extends Record<string, any> {
+export interface Query extends Record<string, string | number | undefined> {
   gender?: Gender,
   name?: string,
   page: number,
@@ -57,11 +59,16 @@ interface FetchCharactersArgs {
   query: Query,
 }
 
+interface FetchCharacterArgs {
+  characterId?: number,
+}
+
 const initialState: InitialState = {
   error: undefined,
   loading: false,
   info: undefined,
   results: [],
+  result: undefined,
 }
 
 // GET Characters
@@ -70,10 +77,28 @@ export const fetchCharacters = createAsyncThunk(
   async ({ query }: FetchCharactersArgs, { rejectWithValue }) => {
     try {
       let endpoint = `${APP_ENDPOINTS.character}`
+
       const queryParams = Object.keys(query).map(property => `${property}=${query[property]}`)
       endpoint += `?${queryParams.join('&')}`
       const response = await getCharacters(endpoint)
       return response.data as InitialState;
+    } catch (error) {
+      let errorMessage = "Internal Server Error";
+      if (error.response) {
+        errorMessage = error.response.data.error
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+)
+
+export const fetchCharacter = createAsyncThunk(
+  'character/fetchCharacter',
+  async ({ characterId }: FetchCharacterArgs, { rejectWithValue }) => {
+    try {
+      let endpoint = `${APP_ENDPOINTS.character}/${characterId}`
+      const { data } = await getCharacters(endpoint)
+      return data
     } catch (error) {
       let errorMessage = "Internal Server Error";
       if (error.response) {
@@ -95,9 +120,7 @@ export const characterSlice = createSlice({
     builder.addCase(fetchCharacters.fulfilled, (state, action) => {
       const { info, results } = action.payload
       return {
-        ...state,
-        loading: false,
-        error: undefined,
+        ...initialState,
         info,
         results,
       }
@@ -108,5 +131,19 @@ export const characterSlice = createSlice({
         error: action.payload,
       }
     })
+    builder.addCase(fetchCharacter.fulfilled, (state, action) => {
+      state.result = action.payload
+    })
   },
 })
+
+export const generateCharacterQuery = (page: number, search: {}) => {
+  const keys = getKeys((search))
+  const state = keys
+    .filter(key => search[key])
+    .reduce((acc: Query, key) => {
+      acc[key] = search[key]
+      return acc
+    }, { page } as Query)
+  return state
+}

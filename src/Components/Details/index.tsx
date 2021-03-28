@@ -1,34 +1,65 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '../Button';
-import { useDisplayState } from '../../Context/Display';
 import { Episodes } from '../Episodes';
 import { fetchEpisodes, Episode } from '../../redux/slices/episodeSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { Loader } from '../Loader'
-import { Query } from '../../redux/slices/characterSlice';
+import { Query, Character, CharacterOrigin } from '../../redux/slices/characterSlice';
+import { formatDate } from '../../utils/date'
 
 interface DetailsProps {
+  details: Character,
   goBackHandler: (params: Query) => void
 }
 
-export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
+interface DataRowProps {
+  idx: keyof Character,
+  data: Character,
+  classNames?: {
+    wrapper: string[],
+    textId: string[],
+  }
+}
+const valPick = ({ idx, data }: DataRowProps) => {
+  try {
+    let val: Partial<number | string | string[] | CharacterOrigin> = ''
+    if (idx === 'created') {
+      val = formatDate(data[idx])
+    } else if (idx !== 'origin') {
+      val = data[idx]
+    } else {
+      val = data[idx].name
+    }
+    return val || 'n/a'
+  } catch (err) {
+    console.warn(err)
+    return ""
+  }
+}
+
+export const DataRow = ({ idx, data, classNames }: DataRowProps) => (
+  <div className={`${classNames?.wrapper.join(' ')} w-full flex flex-row`}>
+    <div className={`leading-7 font-semibold w-20 ${classNames?.textId}`}>{idx}</div>
+    <div className="w-50">{valPick({idx, data})}</div>
+  </div>
+)
+
+export const Details: React.FC<DetailsProps> = ({ details, goBackHandler }) => {
   const {
     episode: episodeResults,
   } = useAppSelector(state => state)
-  const display = useDisplayState()
   const dispatch = useAppDispatch()
   const [list, setList] = useState<Episode[]>([])
-  const [selectedEpisode, setSelectedEpisode] = useState<Episode | undefined>(undefined)
+  const [_, setSelectedEpisode] = useState<Episode | undefined>(undefined)
 
   useEffect(() => {
-    console.log("details:display:::", display)
-    if (Array.isArray(display.character?.episode)) {
-      const endpoints = display.character?.episode.slice(0, 5)
+    if (details && Array.isArray(details.episode)) {
+      const endpoints = details.episode.slice(0, 5)
       if (endpoints) {
         dispatch(fetchEpisodes(endpoints))
       }
     }
-  }, [display]);
+  }, [details])
 
   useEffect(() => {
     const { results } = episodeResults;
@@ -40,33 +71,31 @@ export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
     }
   }, [episodeResults])
 
-  const callback = useCallback(() => {
-    if (display.query) {
-      console.log("details callback:display.query", display.query)
-      goBackHandler(display.query)
-    }
-  }, [display])
+  const callback = () => goBackHandler({})
 
   return (
     <>
-      <div className="md:flex w-full pt-20 px-4 md:pt-0 mx-auto max-w-screen-lg">
-        <div className="md:w-1/6">
-          <Button placeholder="Go back" callback={callback} />
-        </div>
-        <div className="md:w-5/6">
-          {
-            display?.character &&
+      {
+        details &&
+        <div className="md:flex w-full pt-20 px-4 md:pt-0 mx-auto max-w-screen-lg">
+          <div className="md:w-1/6">
+            <Button placeholder="Go back" callback={callback} />
+          </div>
+          <div className="md:w-5/6">
             <>
               <div className="md:flex pt-10 md:pt-0">
                 <div className="md:w-1/3">
-                  <img src={display.character.image} alt={display.character.name} />
+                  <img className={"rounded-lg"} src={details.image} alt={details.name} />
                 </div>
-                <div className="md:w-2/3 pt-5 md:pt-0 md:pl-10">
+                <div className="flex flex-col pt-5 md:pt-0">
                   {
-                    display?.character &&
-                    Object.keys(display.character)
-                      .filter(key => key !== "image" && key !== "episode")
-                      .map((key, idx) => display.character && <p key={idx}>{key === "origin" && display.character[key].hasOwnProperty('name') ? display.character[key].name : display.character[key]}</p>)
+                    Object.keys(details)
+                      .filter(v => !["image", "location", "episode", "url"].includes(v))
+                      .map(key => {
+                        return (
+                          <DataRow key={key} idx={key} data={details} classNames={{ wrapper: ['md:pl-10'], textId: ['text-green-600']}} />
+                        )
+                      })
                   }
                 </div>
               </div>
@@ -84,9 +113,9 @@ export const Details: React.FC<DetailsProps> = ({ goBackHandler }) => {
                 </div>
               }
             </>
-          }
+          </div>
         </div>
-      </div>
+      }
     </>
   )
 }

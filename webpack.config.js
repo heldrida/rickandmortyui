@@ -9,7 +9,8 @@ module.exports = env => ({
   mode: isProd(env) ? "production" : "development",
   entry: './src/index',
   output: {
-    path: path.resolve(__dirname, "./dist")
+    path: path.resolve(__dirname, "./dist"),
+    publicPath: '/'
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -17,7 +18,8 @@ module.exports = env => ({
     })
   ],
   devServer: {
-    contentBase: './dist'
+    contentBase: './dist',
+    historyApiFallback: true,
   },
   module: {
     rules: [{

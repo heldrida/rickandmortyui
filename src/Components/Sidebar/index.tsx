@@ -1,38 +1,57 @@
-import React, { useEffect, useState } from 'react'
-import { fetchCharacters, Query, Gender, Status } from '../../redux/slices/characterSlice'
-import { useAppDispatch } from '../../redux/hooks'
-import { useSetDisplay } from '../../Context/Display'
+import React, { useCallback, useEffect, useState } from 'react'
+import { generateCharacterQuery, Query, Gender, Status } from '../../redux/slices/characterSlice'
 import { Button } from '../Button'
+import { pushState, getRouteSearchQuery } from '../Router';
+import { querySearchTerms } from '../../utils/url'
+import { getKeys } from '../../utils/object'
+import { FILTER_DEBOUNCE_TIMEOUT_MS } from '../../utils/constants';
 import { useDebounce } from '../../utils/hooks'
-import { FILTER_DEBOUNCE_TIMEOUT_MS  } from '../../utils/constants';
 
-const commonInputClass = "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+const commonInputClass = `
+  shadow
+  appearance-none
+  border
+  rounded
+  w-full
+  py-2
+  px-3
+  text-gray-700
+  leading-tight
+  focus:outline-none
+  focus:shadow-outline
+`
 
 interface InputFilterProps {
   callback: any,
+  name: string,
   placeholder: string,
   value?: string,
 }
 
-const InputFilter: React.FC<InputFilterProps> = ({ callback, placeholder, value }) => (
+const InputFilter: React.FC<InputFilterProps> = ({ callback, name, placeholder, value }) => (
   <input
     className={commonInputClass}
-    type="text"
+    onChange={(e: React.ChangeEvent<HTMLInputElement>) => callback(name, e.target.value)}
+    name={name}
     placeholder={placeholder}
-    onChange={callback}
+    type="text"
     value={value} />
 )
 
 interface SelectFilterProps {
   callback: any,
+  name: string,
   options: string[],
   placeholder: string,
   selected: string | undefined,
 }
 
-const SelectFilter: React.FC<SelectFilterProps> = ({ callback, options, placeholder, selected }) => (
+const SelectFilter: React.FC<SelectFilterProps> = ({ name, callback, options, placeholder, selected }) => (
   <div className="inline-block relative w-full">
-    <select className={commonInputClass} value={selected || "default"} onChange={callback}>
+    <select
+      className={`${commonInputClass} cursor-pointer`}
+      value={selected || "default"}
+      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => callback(name, e.target.value)}>
       <option value="default" disabled>{placeholder}</option>
       {
         options.map((val, idx) => <option key={idx} value={val}>{val}</option>)
@@ -44,54 +63,100 @@ const SelectFilter: React.FC<SelectFilterProps> = ({ callback, options, placehol
   </div>
 )
 
+type Filter = Partial<Query>
+
+// Defaults
+const initialFilterState: Filter = {
+  gender: undefined,
+  name: undefined,
+  status: undefined,
+}
+
 export const Sidebar = () => {
-  const dispatch = useAppDispatch()
-  const setDisplay = useSetDisplay()
-
-  const [filterByName, setFilterByName] = useState<string | undefined>(undefined)
-  const [filterByStatus, setFilterByStatus] = useState<string | undefined>(undefined)
-  const [filterByGender, setFilterByGender] = useState<string | undefined>(undefined)
-  const debouncedFilterByName = useDebounce(filterByName, FILTER_DEBOUNCE_TIMEOUT_MS);
-
+  const page = 1
+  const [filter, setFilter] = useState<Filter | undefined>(undefined)
+  const [search, setSearch] = useState<Filter | undefined>(undefined)
+  const debouncedFilter = useDebounce(filter, FILTER_DEBOUNCE_TIMEOUT_MS)
+  
   useEffect(() => {
-    const filterObservers: Record<string, any> = {
-      name: debouncedFilterByName,
-      status: filterByStatus,
-      gender: filterByGender,
+    if (!filter) return
+
+    let title = 'Root'
+    let url = '/'
+    let state = { page: 1 }
+    state = generateCharacterQuery(page, filter)
+
+    // Only trigger when non-page filters available
+    // otherwise, request default
+    if (Object.keys(state).length > 1) {
+      title = `Page ${page}`
+      url = `/page/${page}?${querySearchTerms(filter)}`
     }
-    const query = Object.keys(filterObservers)
-      .filter(key => filterObservers[key])
-      .reduce((acc, key) => {
-        acc[key] = filterObservers[key]
-        return acc
-      }, { page: 1 } as Query);    
 
-      // Only trigger when non-page filters available
-      if (Object.keys(query).length > 1) {
-        dispatch(fetchCharacters({ query  }))
-        // Update user display preferences
-        // since required when paginating filtered by content
-        setDisplay({
-          query      
-        })
-      }
-  }, [debouncedFilterByName, filterByGender, filterByStatus])
+    pushState({
+      state,
+      title,
+      url,
+    })
+  }, [debouncedFilter])
 
-  const reset = () => [setFilterByGender, setFilterByName, setFilterByStatus].forEach(fn => fn(undefined))
+  // Helpers
+  const hasAppliedFilters = useCallback(() => {
+    const findOut = (filter: Filter) => Object.values(filter).filter(val => val).length > 0
+    return filter && findOut(filter) || search && findOut(search)
+  }, [filter, search])
+  
+  const setFilterHandler = useCallback((name: string, value: string) => {
+    const data = {
+      ...filter,
+      [name]: value,
+    }
+    setFilter(data)
+  }, [filter])
+
+  const reset = () => {
+    setFilter(initialFilterState)
+    setSearch(undefined)
+    // window.location.search = ''
+  }
+
+  // On page refresh, only
+  // update the filters based in the query search state
+  // http://localhost:8081/page/1?status=alive&gender=male&name=fe
+  useEffect(() => {
+    const search = getRouteSearchQuery({
+      fallbackValue: {},
+    })
+    if (search) setSearch(search)
+  }, [])
 
   return (
     <div className="px-4 md:px-0">
       <div className="mb-8">
-        <InputFilter value={filterByName || ""} placeholder="Filter by name" callback={(evt) => setFilterByName(evt.target.value)} />
+        <InputFilter
+          name="name"
+          value={filter && filter.name || search && search.name || ""}
+          placeholder="Filter by name"
+          callback={setFilterHandler} />
       </div>
       <div className="mb-8">
-        <SelectFilter options={Object.values(Status)} selected={filterByStatus} placeholder="Status" callback={(evt) => setFilterByStatus(evt.target.value)} />
+        <SelectFilter
+          name="status"
+          options={Object.values(Status)}
+          selected={filter && filter.status || search && search.status}
+          placeholder="Status"
+          callback={setFilterHandler} />
       </div>
       <div className="mb-8">
-        <SelectFilter options={Object.values(Gender)} selected={filterByGender} placeholder="Gender" callback={(evt) => setFilterByGender(evt.target.value)} />
+        <SelectFilter
+          name="gender"
+          options={Object.values(Gender)}
+          selected={filter && filter.gender || search && search.gender}
+          placeholder="Gender"
+          callback={setFilterHandler} />
       </div>
       {
-        Object.values([filterByName, filterByStatus, filterByGender]).filter(val => val).length > 0 &&
+        hasAppliedFilters() &&
         <Button placeholder="Clear" callback={reset} /> 
       }
     </div>

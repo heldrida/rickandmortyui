@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { Episode } from '../../redux/slices/episodeSlice'
-
+import { DataRow } from '../Details'
 const desiredKeyValues = ['id', 'name', 'air_date', 'episode']
 
 export const Episodes = ({ list }: { list: Episode[] }) => {
   const [activeTab, setActiveTab] = useState<number>(0)
   const activeStyle = "bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold"
-  const defaultStyle = "bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold"
+  const defaultStyle = "cursor-pointer bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold"
 
   const onTab = (idx: number) => {
     setActiveTab(idx)
@@ -27,7 +27,7 @@ export const Episodes = ({ list }: { list: Episode[] }) => {
         {
           Object.keys(list[activeTab])
             .filter(key => desiredKeyValues.includes(key))
-            .map((key, idx) => <p key={idx}>{list[activeTab][key]}</p>)
+            .map((key, idx) => <DataRow key={key} idx={key} data={list[activeTab]} classNames={{ wrapper: [''], textId: ['text-gray-500']}} />)
         }
       </div>
     </div>
