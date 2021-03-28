@@ -10,7 +10,7 @@ export const ButtonCircleUp: React.FC<{ menuOpen: boolean }> = ({menuOpen}) => {
     const diff = 1 - (currentYPos / targetYPos)
     const isSM = innerWidth < 768
     setAtBottom(diff < 0.15)
-    setShow(diff < 0.75)
+    setShow(isSM ? diff < 0.8 : diff < 0.4)
   }, 300)
 
   useEffect(() => {

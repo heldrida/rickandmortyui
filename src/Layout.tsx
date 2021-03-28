@@ -1,6 +1,4 @@
-import React, { useCallback, useState, useEffect, CSSProperties }  from 'react'
-import { useDisplayState, useSetDisplay } from './Context/Display'
-import { Query, Character } from './redux/slices/characterSlice';
+import React, { useState, useEffect }  from 'react'
 import { pushState } from './Components/Router'
 import logoImg from './images/logo.svg'
 import iconMenu from './images/icon-menu.svg'
@@ -16,8 +14,6 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ sidebar, content, details }) => {
-  const display = useDisplayState()
-  const setDisplay = useSetDisplay()
   const [transition, setTransition] = useState<boolean>(false)
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
 
@@ -37,13 +33,6 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content, details }) => 
   }, [transition]);
 
   const menuToggleHandler = () => setMenuOpen(false)
-  const goBackHandler = (query: Query) => {
-    // setDisplay({
-    //   query
-    // })
-    history.back()
-  }
-
   const goHome = () => {
     pushState({
       state: {
@@ -57,7 +46,7 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content, details }) => 
   return (
     <div className="w-full">
       <div className="shadow-sm md:shadow-none bg-white w-full z-50 flex justify-center items-center h-14 md:h-16 fixed md:relative md:top-0">
-        <div className={`${display.details && 'hidden'} absolute inset-y-0 left-0 w-16 h-16 md:hidden cursor-pointer`} onClick={menuToggle}>
+        <div className={`${details && 'hidden'} absolute inset-y-0 left-0 w-16 h-16 md:hidden cursor-pointer`} onClick={menuToggle}>
           <img className="p-5 h14" src={iconMenu} alt="Menu" />
         </div>
         <img className="h-14 cursor-pointer transition-opacity transition-transform transform hover:opacity-60 hover:scale-105 duration-300" src={logoImg} alt="Logo" onClick={goHome} />

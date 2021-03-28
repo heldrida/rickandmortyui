@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '../Button';
-import { useDisplayState } from '../../Context/Display';
 import { Episodes } from '../Episodes';
 import { fetchEpisodes, Episode } from '../../redux/slices/episodeSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
@@ -49,20 +48,9 @@ export const Details: React.FC<DetailsProps> = ({ details, goBackHandler }) => {
   const {
     episode: episodeResults,
   } = useAppSelector(state => state)
-  // const display = useDisplayState()
   const dispatch = useAppDispatch()
   const [list, setList] = useState<Episode[]>([])
-  const [selectedEpisode, setSelectedEpisode] = useState<Episode | undefined>(undefined)
-
-  // useEffect(() => {
-  //   console.log("details:display:::", display)
-  //   if (Array.isArray(display.character?.episode)) {
-  //     const endpoints = display.character?.episode.slice(0, 5)
-  //     if (endpoints) {
-  //       dispatch(fetchEpisodes(endpoints))
-  //     }
-  //   }
-  // }, [display]);
+  const [_, setSelectedEpisode] = useState<Episode | undefined>(undefined)
 
   useEffect(() => {
     if (details && Array.isArray(details.episode)) {
@@ -82,17 +70,6 @@ export const Details: React.FC<DetailsProps> = ({ details, goBackHandler }) => {
       setSelectedEpisode(results[0])
     }
   }, [episodeResults])
-
-  // const callback = useCallback(() => {
-  //   if (display.query) {
-  //     console.log("details callback:display.query", display.query)
-  //     goBackHandler(display.query)
-  //   }
-  // }, [display])
-
-  useEffect(() => {
-    console.log('Details:details', details)
-  }, [details])
 
   const callback = () => goBackHandler({})
 

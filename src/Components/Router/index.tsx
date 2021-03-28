@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { fetchCharacters, Query } from '../../redux/slices/characterSlice'
-import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { Query } from '../../redux/slices/characterSlice'
 
 const EVENT_PUSH_STATE = 'onpushstate'
 const EVENT_POP_STATE = 'popstate'
@@ -14,16 +13,6 @@ interface PushState {
 export const defaultLocation = () => `${window.location.pathname}${window.location.search}`
 export const pushStateUrl = (url: string) => `${url}${window.location.search}`
 export const pushState: (props: PushState) => void = ({ state, title, url }) => {  
-  // by default should
-  // pushState({
-  //   state: {
-  //     ...search,
-  //     page: 2,
-  //   },
-  //   title,
-  //   url: `/page/${2}?${querySearchTerms(search)}`,
-  // })
-
   document.dispatchEvent(new CustomEvent(EVENT_PUSH_STATE, {
     detail: {
       state: {
@@ -35,7 +24,7 @@ export const pushState: (props: PushState) => void = ({ state, title, url }) => 
       url
     }
   }))
-  console.log('pushState', { state, title, url })
+
   history.pushState(state, title, url)
 }
 
@@ -188,7 +177,6 @@ export const Router = ({ children, routes }: RouterProps) => {
       return false
     }) || ''
     if (typeof routes[match] === 'function') {
-      console.log('url.... > > >', url)
       const [key, value] = extractRouteParams(url)
       const search: Record<string, string> = getRouteSearchQuery({ search: url.split('?')[1], fallbackValue: [] })
       routes[match]({

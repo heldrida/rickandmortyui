@@ -117,7 +117,7 @@ export const Sidebar = () => {
   const reset = () => {
     setFilter(initialFilterState)
     setSearch(undefined)
-    window.location.search = ''
+    // window.location.search = ''
   }
 
   // On page refresh, only

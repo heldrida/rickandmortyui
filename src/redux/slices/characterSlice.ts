@@ -96,10 +96,8 @@ export const fetchCharacter = createAsyncThunk(
   'character/fetchCharacter',
   async ({ characterId }: FetchCharacterArgs, { rejectWithValue }) => {
     try {
-      console.log("OK OK")
       let endpoint = `${APP_ENDPOINTS.character}/${characterId}`
       const { data } = await getCharacters(endpoint)
-      console.log('getcharacter response', data)
       return data
     } catch (error) {
       let errorMessage = "Internal Server Error";
@@ -134,7 +132,6 @@ export const characterSlice = createSlice({
       }
     })
     builder.addCase(fetchCharacter.fulfilled, (state, action) => {
-      console.log("action.payload", action.payload)
       state.result = action.payload
     })
   },

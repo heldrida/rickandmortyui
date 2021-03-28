@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from "../Card";
 import { Pagination } from '../Pagination'
-import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { fetchCharacters, Query } from '../../redux/slices/characterSlice'
+import { useAppSelector } from '../../redux/hooks'
 import { Character } from '../../redux/slices/characterSlice'
 import { Loader } from '../Loader'
-import { useDisplayState } from '../../Context/Display'
 import { getRouteValue } from '../../Components/Router'
 import noResultsImg from '../../images/no-results.png'
+import {
+  pushState,
+  getRouteSearchQuery } from '../../Components/Router'
 
 const quotes = [
   "Sometimes science is more art than science, Morty. Lot of people don’t get that",
@@ -53,6 +54,23 @@ export const CharacterList = () => {
     }
   }, [characterResults])
 
+  // Passes to Pagination
+  // keep the business logic outside
+  type OnIndexRequestHandler = ({ idx }: { idx: number }) => void 
+  const onIndexRequestHandler: OnIndexRequestHandler = ({idx}) => {
+    const search = getRouteSearchQuery({
+      fallbackValue: []
+    })
+    pushState({
+      state: {
+        ...search,
+        page: idx,
+      },
+      title: `Page ${idx}`,
+      url: `/page/${idx}${window.location.search}`,
+    })
+  }
+
   return (
     <>
       {
@@ -84,7 +102,11 @@ export const CharacterList = () => {
           characterResults.info?.count &&
           characterResults.info?.pages > 1 && 
           <div className="w-full pt-5 pb-5 pr-1">
-            <Pagination total={characterResults.info?.pages} range={5} page={page} />
+            <Pagination
+              onIndexChange={onIndexRequestHandler}
+              total={characterResults.info?.pages}
+              range={5}
+              page={page} />
           </div>
         }
       </>
