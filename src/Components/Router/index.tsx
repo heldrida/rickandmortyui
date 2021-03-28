@@ -11,7 +11,19 @@ interface PushState {
   url: string,
 }
 
+export const defaultLocation = () => `${window.location.pathname}${window.location.search}`
+export const pushStateUrl = (url: string) => `${url}${window.location.search}`
 export const pushState: (props: PushState) => void = ({ state, title, url }) => {  
+  // by default should
+  // pushState({
+  //   state: {
+  //     ...search,
+  //     page: 2,
+  //   },
+  //   title,
+  //   url: `/page/${2}?${querySearchTerms(search)}`,
+  // })
+
   document.dispatchEvent(new CustomEvent(EVENT_PUSH_STATE, {
     detail: {
       state: {
@@ -56,7 +68,7 @@ interface getRouteSearchQuery {
   fallbackValue?: any,
 }
 
-export const getRouteSearchQuery = ({ fallbackValue, search = "" }: getRouteSearchQuery) => {
+export const getRouteSearchQuery = ({ fallbackValue, search = (() => window.location.search)() }: getRouteSearchQuery) => {
   const qs: Record<string, string> = search.replace('?', '')
    .split('&')
    .reduce((acc: Record<string, string>, curr: string) => {
@@ -92,7 +104,7 @@ export const useRouteChange = ({ onPushState }: { onPushState?: (e: PushState) =
         page: getRouteValue({ name: 'page', pathname: window.location.pathname, fallbackValue: 1 })
       },
       title: '',
-      url: window.location.pathname,
+      url: pushStateUrl(window.location.pathname),
     }  
     if (typeof onPushState === 'function') onPushState(data)
     setChanged({
@@ -125,17 +137,39 @@ export const useRouteChange = ({ onPushState }: { onPushState?: (e: PushState) =
 // e.g. used `:num` instead of a regex pattern
 // we map each case to what the system understands
 // by using the pathnameMatchReplacer handler
-const pathAttributesReplacers: Record<string, string> = {
-  ':num': '([0-9].*)'
+export const pathAttributesReplacers: Record<string, string> = {
+  ':num': '([0-9].*)',
+  // Format is `bruce-dot-lee_2-20`
+  ':slug': '(.*)(?=.*\_)(.*)',
 }
-const exactPathnameMatch = (pathname: string, curr: string) => pathname.split('/').filter(v => v).find(path => path.match(`${curr}$`))
+const isBasePath = (pathname: string) => pathname.split('/').filter(v => v).length == 0
+export const exactPathnameMatch = (pathname: string, curr: string) =>  isBasePath(pathname) && pathname === curr || pathname.split('/').pop()?.match(`^${curr}$`) && true
 export const pathnameMatchReplacer = (pathname: string) => Object.keys(pathAttributesReplacers).reduce((acc, curr) => exactPathnameMatch(pathname, curr) && pathname.replace(curr, pathAttributesReplacers[curr]) || acc, pathname)
+export const urlMatchesHumanRoute = (humanRoute: string, url: string) => {
+  if (isBasePath(url)) {
+    return exactPathnameMatch(humanRoute, url)
+  }
+  let regex = ''
+  const idx = humanRoute.split('/').findIndex(part => {
+    if (pathAttributesReplacers[part]) {
+      regex = pathAttributesReplacers[part]
+      return true
+    }
+  })
+  const matchPart = url.split('/')[idx]
+  if (!matchPart) {
+    return false
+  }
+  return exactPathnameMatch(matchPart, regex) && true  
+}
 
 // Our current use-case is simple
 // its expected a base path as key,
 // and the correspondent value immediately after
 // we also just care about the path, no search query
 export const extractRouteParams = (url: string) => url.split('?')[0].split('/').filter(v => v)
+
+export type UrlParams = Record<string, string | {}>
 
 type Routes = Record<string, Function>
 
@@ -148,13 +182,13 @@ export const Router = ({ children, routes }: RouterProps) => {
   const onPushState = useCallback((state: PushState) => {
     const { url } = state
     const match: keyof typeof routes = Object.keys(routes).find(humanRoute => {
-      const route = pathnameMatchReplacer(humanRoute)
       if (url) {
-        return url.match(route)
+        return urlMatchesHumanRoute(humanRoute, url)
       }
-      return
+      return false
     }) || ''
     if (typeof routes[match] === 'function') {
+      console.log('url.... > > >', url)
       const [key, value] = extractRouteParams(url)
       const search: Record<string, string> = getRouteSearchQuery({ search: url.split('?')[1], fallbackValue: [] })
       routes[match]({

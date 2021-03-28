@@ -12,6 +12,8 @@ export const paginator: (pagination: Pagination) => number[] = ({
   let numbered = [];
   const last = currentIndex + range
 
+  console.log("pagination util currentIndex>>>>", currentIndex)
+
   // Validate
   if (currentIndex > total || range < 1) {
     throw new Error("Paginator failure: Unexpected input!");
@@ -20,7 +22,7 @@ export const paginator: (pagination: Pagination) => number[] = ({
     return paginator({
       total,
       range,
-      currentIndex: currentIndex - range,
+      currentIndex: Math.max(1, currentIndex - range),
     }) 
   }
 

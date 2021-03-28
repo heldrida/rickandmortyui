@@ -1,10 +1,9 @@
 import React, { useCallback, useState, useEffect, CSSProperties }  from 'react'
-import { useDisplayState, useSetDisplay } from './Context/Display';
-import { Details } from "./Components/Details";
-import { Query } from './redux/slices/characterSlice';
+import { useDisplayState, useSetDisplay } from './Context/Display'
+import { Query, Character } from './redux/slices/characterSlice';
 import { pushState } from './Components/Router'
 import logoImg from './images/logo.svg'
-import iconMenu from './images/icon-menu.svg';
+import iconMenu from './images/icon-menu.svg'
 import iconClose from './images/close.svg'
 import { ButtonCircleUp } from './Components/ButtonCircleUp'
 
@@ -13,9 +12,10 @@ const commonYOffset = "pt-20 md:pt-0"
 interface LayoutProps {
   sidebar: React.ReactNode,
   content: React.ReactNode,
+  details?: React.ReactNode
 }
 
-export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
+export const Layout: React.FC<LayoutProps> = ({ sidebar, content, details }) => {
   const display = useDisplayState()
   const setDisplay = useSetDisplay()
   const [transition, setTransition] = useState<boolean>(false)
@@ -65,7 +65,7 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
       <div className="md:px-5 w-full max-w-screen-2xl mx-auto md:pt-5">
         <div className="md:flex">
           {
-            !display.details &&
+            !details &&
             <Main
               menuOpen={menuOpen}
               transition={transition}
@@ -73,9 +73,7 @@ export const Layout: React.FC<LayoutProps> = ({ sidebar, content }) => {
               sidebar={sidebar}
               content={content}
             /> ||
-            <Details
-              goBackHandler={goBackHandler}
-            />
+            <>{details}</>
           }
         </div>
       </div>
@@ -91,7 +89,7 @@ interface MainProps extends LayoutProps {
 
 const Main: React.FC<MainProps> = ({ menuOpen, transition, menuToggleHandler, sidebar, content }) => (
   <>
-    <div className={`${commonYOffset} px-5 md:pr-5 bg-white z-20 ${transition ? 'transition-transform' : 'transition-none'} duration-300 md:transition-none bg-white fixed transform ${menuOpen ? 'translate-x-1/1 shadow-lg' : '-translate-x-full' } md:shadow-none md:-translate-x-0 flex-none h-full w-3/4 md:sticky md:top-10 md:w-80`}>
+    <div className={`${commonYOffset} px-5 md:pr-5 bg-white md:bg-transparent z-20 ${transition ? 'transition-transform' : 'transition-none'} duration-300 md:transition-none bg-white fixed transform ${menuOpen ? 'translate-x-1/1 shadow-lg' : '-translate-x-full' } md:shadow-none md:-translate-x-0 flex-none h-full w-3/4 md:sticky md:top-10 md:w-80`}>
       <img className={`${menuOpen ? '' : 'hidden'} md:hidden fixed top-30 h-10 -right-16 pointer-events-none`} src={iconClose} alt="Close the menu" />
       {sidebar}
     </div>

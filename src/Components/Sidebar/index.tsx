@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { generateCharacterQuery, Query, Gender, Status } from '../../redux/slices/characterSlice'
 import { Button } from '../Button'
-import { pushState } from '../Router';
+import { pushState, getRouteSearchQuery } from '../Router';
 import { querySearchTerms } from '../../utils/url'
 import { getKeys } from '../../utils/object'
 import { FILTER_DEBOUNCE_TIMEOUT_MS } from '../../utils/constants';
@@ -75,8 +75,9 @@ const initialFilterState: Filter = {
 export const Sidebar = () => {
   const page = 1
   const [filter, setFilter] = useState<Filter | undefined>(undefined)
+  const [search, setSearch] = useState<Filter | undefined>(undefined)
   const debouncedFilter = useDebounce(filter, FILTER_DEBOUNCE_TIMEOUT_MS)
-
+  
   useEffect(() => {
     if (!filter) return
 
@@ -100,9 +101,10 @@ export const Sidebar = () => {
   }, [debouncedFilter])
 
   // Helpers
-  const hasAppliedFilters = useCallback(() =>
-    filter && Object.values(filter).filter(val => val).length > 0,
-  [filter])
+  const hasAppliedFilters = useCallback(() => {
+    const findOut = (filter: Filter) => Object.values(filter).filter(val => val).length > 0
+    return filter && findOut(filter) || search && findOut(search)
+  }, [filter, search])
   
   const setFilterHandler = useCallback((name: string, value: string) => {
     const data = {
@@ -114,14 +116,26 @@ export const Sidebar = () => {
 
   const reset = () => {
     setFilter(initialFilterState)
+    setSearch(undefined)
+    window.location.search = ''
   }
+
+  // On page refresh, only
+  // update the filters based in the query search state
+  // http://localhost:8081/page/1?status=alive&gender=male&name=fe
+  useEffect(() => {
+    const search = getRouteSearchQuery({
+      fallbackValue: {},
+    })
+    if (search) setSearch(search)
+  }, [])
 
   return (
     <div className="px-4 md:px-0">
       <div className="mb-8">
         <InputFilter
           name="name"
-          value={filter && filter.name || ""}
+          value={filter && filter.name || search && search.name || ""}
           placeholder="Filter by name"
           callback={setFilterHandler} />
       </div>
@@ -129,7 +143,7 @@ export const Sidebar = () => {
         <SelectFilter
           name="status"
           options={Object.values(Status)}
-          selected={filter && filter.status}
+          selected={filter && filter.status || search && search.status}
           placeholder="Status"
           callback={setFilterHandler} />
       </div>
@@ -137,7 +151,7 @@ export const Sidebar = () => {
         <SelectFilter
           name="gender"
           options={Object.values(Gender)}
-          selected={filter && filter.gender}
+          selected={filter && filter.gender || search && search.gender}
           placeholder="Gender"
           callback={setFilterHandler} />
       </div>

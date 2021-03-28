@@ -7,15 +7,32 @@ import { Character } from '../../redux/slices/characterSlice'
 import { Loader } from '../Loader'
 import { useDisplayState } from '../../Context/Display'
 import { getRouteValue } from '../../Components/Router'
+import noResultsImg from '../../images/no-results.png'
+
+const quotes = [
+  "Sometimes science is more art than science, Morty. Lot of people don’t get that",
+  "Let’s get this dumb universe rollin’!",
+  "Stay scientific, Jerry.",
+  "Life is effort and I’ll stop when I die!",
+  "Don’t deify the people who leave you",
+  "The world is full of idiots who don’t understand what’s important! And they’ll try to tear us apart, Morty!",
+  "Think for yourselves. Don’t be sheep.",
+  "Be good, Morty. Be better than me.",
+  "It’s a new machine. It detects stuff all the way up your butt",
+  "Weddings are basically funerals with cake.",
+]
+
+const failedSearchQuote = () => quotes[Math.floor(Math.random() * quotes.length - 1) + 1 ]
 
 export const CharacterList = () => {
   const {
     character: characterResults
   } = useAppSelector(state => state)
-  const display = useDisplayState()
+  // const display = useDisplayState()
 
   const [list, setList] = useState<Character[]>([])
   const [page, setPage] = useState<number>(1)
+  const [showError, setShowError] = useState<boolean>(false)
 
   useEffect(() => {
     const { results, error } = characterResults;
@@ -23,6 +40,7 @@ export const CharacterList = () => {
     // On error show API error in console
     if (error) {
       console.warn(error)
+      setShowError(true)
     }
 
     // Shallow validation
@@ -45,12 +63,18 @@ export const CharacterList = () => {
             list.length > 0 &&
             <div className="w-full px-0 m:px-0 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
               {
-                list.map((props, idx) => <Card key={idx} {...props} />)
+                list.map((props, idx) => <Card key={idx} {...props} page={page} order={idx} />)
               }
-            </div> ||
-            <div className="w-full text-center p-20">
-              <p>{'No results found!'}</p>
-            </div>
+            </div> || <>
+              {
+                !characterResults.loading &&
+                showError &&
+                <div className="w-full text-center flex justify-center flex-col items-center">
+                  <p className="w-3/4 text-gray-500 font-extrabold pb-5">{failedSearchQuote()}</p>
+                  <img className="w-3/4 max-w-screen-md" src={noResultsImg} alt={failedSearchQuote()} />
+                </div>
+              }
+            </>
           }
         </>
       }
@@ -58,9 +82,9 @@ export const CharacterList = () => {
         {
           list.length > 0 &&
           characterResults.info?.count &&
-          characterResults.info?.pages > 1 &&          
+          characterResults.info?.pages > 1 && 
           <div className="w-full pt-5 pb-5 pr-1">
-            <Pagination total={characterResults.info?.pages} range={5} page={page} filters={(display.query && Object.keys(display.query).length || 1)} />
+            <Pagination total={characterResults.info?.pages} range={5} page={page} />
           </div>
         }
       </>

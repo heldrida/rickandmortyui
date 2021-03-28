@@ -1,47 +1,37 @@
 import React, { useCallback } from 'react'
-import { useSetDisplay, useDisplayState } from '../../Context/Display'
 import { Button } from '../Button'
 import { Character } from '../../redux/slices/characterSlice';
+import { pushState, pushStateUrl } from '../Router'
 
-export const Card: React.FC<Character> = ({
+interface CardProps extends Character {
+  page: number,
+  order: number
+}
+
+export const Card: React.FC<CardProps> = ({
+  page,
+  order,
   id,
   name,
   status,
   species,
-  type,
-  gender,
-  origin,
-  created,
   image,
-  episode,
 }) => {
-  const setDisplay = useSetDisplay()
-  const display = useDisplayState()
-
   const onDetails = useCallback(() => {
-    console.log("card:display.query", display.query)
-    setDisplay({
-      details: true,
-      character: {
-        id,
-        name,
-        status,
-        species,
-        type,
-        gender,
-        origin,
-        created,
-        image,
-        episode,
+    pushState({
+      state: {
+        page,
+        order,
       },
-      query: display.query || { page: 1 },
+      title: `Details for ${name}`,
+      url: pushStateUrl(`/details/${name.split(' ').join('-').toLowerCase()}_${page}-${id}`),
     })
-  }, [id, display])
+  }, [id])
 
   return (
     <>
-      <div className="rounded overflow-hidden shadow-lg">
-        <img className="w-full" src={image} alt="Avatar" />
+      <div className="transition-all transform ease-in md:hover:scale-105 md:opacity-90 hover:opacity-100 duration-400 rounded overflow-hidden shadow-lg">
+        <img className="w-full cursor-pointer" src={image} alt="Avatar" onClick={onDetails} />
         <div className="px-6 py-4 pb-0">
           <p className="font-bold text-gray-700 text-base">
             {name}        

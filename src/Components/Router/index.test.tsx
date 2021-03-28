@@ -3,6 +3,8 @@ import {
   getRouteSearchQuery,
   pathnameMatchReplacer,
   extractRouteParams,
+  exactPathnameMatch,
+  pathAttributesReplacers,
 } from './';
 
 describe('Router', () => {
@@ -112,6 +114,11 @@ describe('PathnameMatchReplacer returns valid data', () => {
     const result = pathnameMatchReplacer("/page/:nums")
     expect(result).toBe(expected)
   })
+  test('on details slug', () => {
+    const expected = "/details/(.*)(?=.*\_)(.*)"
+    const result = pathnameMatchReplacer("/details/:slug")
+    expect(result).toBe(expected)
+  })
 })
 
 describe('ExtractRouteParams provides the parameters', () => {
@@ -125,4 +132,35 @@ describe('ExtractRouteParams provides the parameters', () => {
     const result = extractRouteParams('/page/7?name=bob&status=unknown&gender=female')
     expect(result).toBe(result)
   })
+})
+
+describe("ExactPathnameMatch", () => {
+  test("matches on equality for a path", () => {
+    const expected = true
+    const result = exactPathnameMatch("2", pathAttributesReplacers[':num'])
+    expect(result).toBe(expected)
+  })
+  test("matches on equality for a slug", () => {
+    const expected = true
+    const result = exactPathnameMatch("bruce-lee_4-20", pathAttributesReplacers[':slug'])
+    expect(result).toBe(expected)
+  })
+  test("matches on equality, when a single slash", () => {
+    const expected = true
+    const result = exactPathnameMatch("/", "/")
+    expect(result).toBe(expected)
+  })
+  // test.skip("ok", () => {
+  //   const url = "/details/michael-jackson_1-20"
+  //   const humanRoute = "/details/:slug"
+  //   let regex = ''
+  //   const idx = humanRoute.split('/').findIndex(part => {
+  //     if (pathAttributesReplacers[part]) {
+  //       regex = pathAttributesReplacers[part]
+  //       return true
+  //     }
+  //   })
+  //   const matchPart = url.split('/')[idx]
+  //   return exactPathnameMatch(matchPart, regex) && true
+  // })
 })

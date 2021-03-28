@@ -2,7 +2,7 @@ import React, { useCallback,useState, useEffect } from 'react'
 import { paginator } from '../../utils/pagination';
 import { arrowDisableStyleHandler } from "../../utils/pagination";
 import {  Query, Gender, Status } from '../../redux/slices/characterSlice'
-import { useDisplayState, } from '../../Context/Display'
+// import { useDisplayState, } from '../../Context/Display'
 import { pushState, getRouteSearchQuery, useRouteChange } from '../../Components/Router'
 
 enum PaginationActions {
@@ -12,20 +12,20 @@ enum PaginationActions {
 }
 
 interface Pagination {
-  filters: number,
+  // filters: number,
   page: number,
   total: number,
   range: number,
 }
 
-export const Pagination = ({ filters, page, total, range, }: Pagination) => {
+export const Pagination = ({ page, total, range, }: Pagination) => {
   const [currentIndex, setCurrentIndex] = useState<number>(page)
   const [pages, setPages] = useState<number[]>([])
-  const [filterByName, setFilterByName] = useState<string | undefined>(undefined)
-  const [filterByStatus, setFilterByStatus] = useState<Status | undefined>(undefined)
-  const [filterByGender, setFilterByGender] = useState<Gender | undefined>(undefined)
-  const display = useDisplayState()
-  const routeChange = useRouteChange({})
+  // const [filterByName, setFilterByName] = useState<string | undefined>(undefined)
+  // const [filterByStatus, setFilterByStatus] = useState<Status | undefined>(undefined)
+  // const [filterByGender, setFilterByGender] = useState<Gender | undefined>(undefined)
+  // const display = useDisplayState()
+  // const routeChange = useRouteChange({})
 
   const defaultStyle = "align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-base text-gray-600 dark:text-gray-400 focus:outline-none border border-transparent active:bg-transparent hover:bg-gray-100 focus:shadow-outline-gray dark:hover:bg-gray-500 dark:hover:text-gray-300 dark:hover:bg-opacity-10"
   const activeStyle = "align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-base text-white bg-green-400 border border-transparent active:bg-green-400 hover:bg-green-700 focus:shadow-outline-purple"
@@ -75,26 +75,26 @@ export const Pagination = ({ filters, page, total, range, }: Pagination) => {
         page: idx
       }
 
-      if (filterByName) {
-        query = {
-          ...query,
-          name: filterByName
-        }
-      }
+      // if (filterByName) {
+      //   query = {
+      //     ...query,
+      //     name: filterByName
+      //   }
+      // }
   
-      if (filterByGender) {
-        query = {
-          ...query,
-          gender: filterByGender
-        }
-      }
+      // if (filterByGender) {
+      //   query = {
+      //     ...query,
+      //     gender: filterByGender
+      //   }
+      // }
   
-      if (filterByStatus) {
-        query = {
-          ...query,
-          status: filterByStatus,
-        }
-      }
+      // if (filterByStatus) {
+      //   query = {
+      //     ...query,
+      //     status: filterByStatus,
+      //   }
+      // }
 
       setCurrentIndex(idx)
 
@@ -102,6 +102,7 @@ export const Pagination = ({ filters, page, total, range, }: Pagination) => {
         fallbackValue: []
       })
 
+      // TODO: move business logic out of pagination
       pushState({
         state: {
           ...search,
@@ -128,11 +129,11 @@ export const Pagination = ({ filters, page, total, range, }: Pagination) => {
   }, [page])
 
   useEffect(() => {
-    console.log('Pagination: page change', {
-      routeChange, page,
-       total, currentIndex,
-    })
-    
+    // console.log('Pagination: page change', {
+    //   routeChange, page,
+    //    total, currentIndex,
+    // })
+
     if (window.location.pathname === "/") {
       try {
         const pages = paginator({
@@ -162,18 +163,18 @@ export const Pagination = ({ filters, page, total, range, }: Pagination) => {
     }
   }, [total])
 
-  useEffect(() => {
-    const { query } = display
-    if (query?.name) {
-      setFilterByName(query.name)
-    }
-    if (query?.gender) {
-      setFilterByGender(query.gender)
-    }
-    if (query?.status) {
-      setFilterByStatus(query.status)
-    }
-  }, [display])
+  // useEffect(() => {
+  //   const { query } = display
+  //   if (query?.name) {
+  //     setFilterByName(query.name)
+  //   }
+  //   if (query?.gender) {
+  //     setFilterByGender(query.gender)
+  //   }
+  //   if (query?.status) {
+  //     setFilterByStatus(query.status)
+  //   }
+  // }, [display])
 
   return (
     <div className="flex mt-2 justify-end">
