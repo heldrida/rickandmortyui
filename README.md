@@ -87,6 +87,28 @@ npx http-server ./dist
 
 The static site is hosted [@fleek](https://fleek.co/), you can visit the public version of the "hopefully 😅" latest build [here](https://bold-glitter-7607.on.fleek.co/)!
 
+## DockerFile
+
+
+To build the docker image run the follwing command:
+
+```
+docker build -t rickandmortyui .
+```
+
+You should find it listed `rickandmortyui`, when:
+
+```
+docker ps -a
+```
+
+You can check the static build served by mapping the exposed Docker port for the instance of the image `rickandmortyui` to one in your local-machine (as long if available, changed the :8080 in the command to whatever suits you).
+
+```
+docker run -p 8080:8080 rickandmortyui
+```
+
+Obs: We're assuming that you have Docker installed correctly, if not visit [Docker](https://www.docker.com/get-started) or otherwise, if not interested in Docker feel free to ignore.
 
 ## References
 
