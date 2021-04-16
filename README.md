@@ -10,7 +10,7 @@
 
 This project implements a user interface for the Rick and Morty [API](https://rickandmortyapi.com/documentation), using Reactjs (Typescript, ReduxToolkit, Hooks), and Axios.
 
-It's as an experimental project, that tests the brillian work of [evanw](https://github.com/evanw/esbuild) on [esbuild](https://esbuild.github.io/) (although primarily used as a webpack loader, since opted to use Webpack dev server for [HMR](https://webpack.js.org/guides/hot-module-replacement/), as otherwise it'd require some extra work) and provides a ground to implement some common features.
+It's an experimental project, that tests the brillian work of [evanw](https://github.com/evanw/esbuild) on [esbuild](https://esbuild.github.io/) (although primarily used as a webpack loader, since opted to use Webpack dev server for [HMR](https://webpack.js.org/guides/hot-module-replacement/), as otherwise it'd require some extra work) and provides a ground to implement some common features.
 
 Also, a test-drive for [Tailwindcss](https://tailwindcss.com/), used in the project as a utility-based CSS framework - it seems to have a lot of traction nowadays, although after years of modern FE devs bashing on older class based and inheritance practices.
 
