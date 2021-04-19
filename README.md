@@ -8,7 +8,7 @@
 
 # Rick and Morty UI
 
-The project implements a user interface for the Rick and Morty [API](https://rickandmortyapi.com/documentation), using Reactjs (Typescript, ReduxToolkit, Hooks), and Axios. See it in action [here!](https://bold-glitter-7607.on.fleek.co/)
+This project implements a user interface for the Rick and Morty [API](https://rickandmortyapi.com/documentation), using Reactjs (Typescript, ReduxToolkit, Hooks), and Axios. See it in action [here!](https://bold-glitter-7607.on.fleek.co/)
 
 It's an experimental project, that tests the brillian work of [evanw](https://github.com/evanw/esbuild) on [esbuild](https://esbuild.github.io/) (although primarily used as a webpack loader, since opted to use Webpack dev server for [HMR](https://webpack.js.org/guides/hot-module-replacement/), as otherwise it'd require some extra work) and provides a ground to implement some common features.
 
